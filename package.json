@@ -1,0 +1,15 @@
+{
+  "name": "confluence_mgt_agent",
+  "version": "1.0.0",
+  "description": "Confluence 스페이스 자동화 관리 + MPS 워크플로우 지원 에이전트",
+  "scripts": {
+    "analyze:sd": "node scripts/analyze_sd.js",
+    "analyze:candidates": "node scripts/analyze_migration_candidates.js",
+    "setup:aa": "node scripts/setup_aa_space.js",
+    "setup:aa:dryrun": "node scripts/setup_aa_space.js --dry-run"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2"
+  }
+}
+

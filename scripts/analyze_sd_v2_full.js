@@ -1,3 +1,4 @@
+require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
 const fs = require('fs');
 const path = require('path');
 
@@ -40,7 +41,8 @@ console.log('고유 폴더 수:', folderIds.size);
 
 // Fetch folder names one by one
 const folderNames = {};
-const AUTH = process.env.CONFLUENCE_AUTH || "email:api_token";
+
+const AUTH = process.env.CONFLUENCE_AUTH || "email:api_token"; // CONFLUENCE_AUTH 환경변수 사용
 
 // We'll use synchronous fetch via child_process for folder names
 const { execSync } = require('child_process');
