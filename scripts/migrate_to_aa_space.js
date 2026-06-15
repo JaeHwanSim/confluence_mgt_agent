@@ -54,6 +54,7 @@ const API_DELAY_MS = 700;
 
 // SD → AA 카테고리-서브카테고리 → AA 부모 페이지 매핑
 // AA 스페이스의 섹션 페이지 제목과 일치해야 합니다.
+// MPS 이력은 연도+과제별 하위 섹션으로 매핑
 const CATEGORY_TO_AA_PARENT = {
   'MPS 이력': {
     '연간 MPS': '연간 MPS',
@@ -66,7 +67,6 @@ const CATEGORY_TO_AA_PARENT = {
     'AI 프로젝트': 'AI 프로젝트',
     'SW 프로젝트': 'SW 프로젝트',
     'Device 프로젝트': 'Device 프로젝트',
-    'Solution 프로젝트': 'Solution 프로젝트',
   },
   '기술 조사 & 인사이트': {
     'AI·ML 기술': 'AI·ML 기술',
@@ -75,13 +75,36 @@ const CATEGORY_TO_AA_PARENT = {
     '특허·논문 분석': '특허·논문 분석',
   },
   '팀 운영 가이드': {
-    '개발 가이드라인': '팀 운영 가이드',  // 해당 섹션 바로 하위
+    '개발 가이드라인': '팀 운영 가이드',
   },
   '주간·월간 보고 (보관)': {
     '2025년': '2025년 보고',
     '2026년': '2026년 보고',
   },
 };
+
+// MPS 문서의 과제별 하위 섹션 매핑 (제목에서 과제 추출)
+// AA 스페이스 구조: 2025년 월간·주간 > 연구소 / AI 과제 / SW 과제 / ...
+const MPS_TEAM_TO_SUBSECTION = {
+  '전체': '연구소',   // 연구소 전체 MPS
+  'AI': 'AI 과제',
+  'SW': 'SW 과제',
+  'Device': 'Device 과제',
+};
+
+/**
+ * MPS 문서 제목에서 과제 팀을 추출합니다.
+ * 예: "[AI] 2025-07 월간 MPS" → "AI"
+ * 예: "[전체] 2025-07 월간 MPS" → "전체"
+ * @param {string} title
+ * @returns {string|null}
+ */
+function extractTeamFromTitle(title) {
+  const match = title.match(/^\[(.+?)\]/);
+  if (!match) return null;
+  const team = match[1].trim();
+  return MPS_TEAM_TO_SUBSECTION[team] ? team : null;
+}
 
 // ─── 이관 로그 관리 (중복 방지) ───────────────────────────────────────────────
 
@@ -256,8 +279,7 @@ async function createPage(spaceId, parentId, title, bodyHtml) {
  */
 async function addLabels(pageId, labels) {
   if (!labels || labels.length === 0) return;
-  const validLabels = labels.map(l => l.replace(/:/g, '-'));
-  const payload = validLabels.map(name => ({ prefix: 'global', name }));
+  const payload = labels.map(name => ({ prefix: 'global', name }));
   
   return new Promise((resolve, reject) => {
     const url = new URL(`${BASE_URL}/wiki/rest/api/content/${pageId}/label`);
@@ -408,6 +430,10 @@ async function buildSectionPageCache() {
     '2026년 보고',
   ];
 
+  // MPS 연도별 섹션의 과제 하위 섹션
+  const mpsYearSections = ['2025년 월간·주간', '2026년 월간·주간'];
+  const mpsTeamSections = ['연구소', 'AI 과제', 'SW 과제', 'Device 과제'];
+
   const cache = new Map();
   console.log('AA 스페이스 섹션 페이지 ID 조회 중...');
 
@@ -420,6 +446,36 @@ async function buildSectionPageCache() {
       console.warn(`  ⚠️  "${title}" 페이지를 찾을 수 없습니다. setup_aa_space.js를 먼저 실행하세요.`);
     }
     await sleep(300);
+  }
+
+  // MPS 과제별 하위 섹션 조회 (예: "2025년 월간·주간 > AI 과제")
+  console.log('\nMPS 과제별 하위 섹션 조회 중...');
+  for (const yearSection of mpsYearSections) {
+    const yearPageId = cache.get(yearSection);
+    if (!yearPageId) continue;
+
+    for (const teamSection of mpsTeamSections) {
+      const fullKey = `${yearSection} > ${teamSection}`;
+      try {
+        const encoded = encodeURIComponent(teamSection);
+        const data = await confluenceRequest(
+          'GET',
+          `/wiki/api/v2/pages?space-key=${AA_SPACE_KEY}&title=${encoded}&limit=10`
+        );
+        // 해당 제목의 페이지 중 부모가 yearSection인 것 찾기
+        const results = data.results || [];
+        const match = results.find(r => r.parentId === yearPageId);
+        if (match) {
+          cache.set(fullKey, match.id);
+          console.log(`  ✅ "${fullKey}" → ID: ${match.id}`);
+        } else {
+          console.warn(`  ⚠️  "${fullKey}" 하위 페이지를 찾을 수 없습니다.`);
+        }
+      } catch (err) {
+        console.warn(`  ⚠️  "${fullKey}" 조회 실패: ${err.message}`);
+      }
+      await sleep(300);
+    }
   }
 
   return cache;
@@ -439,10 +495,20 @@ async function migrateSinglePage(candidate, spaceId, sectionCache) {
   if (!catMap) {
     return { success: false, error: `알 수 없는 카테고리: ${candidate.category}` };
   }
-  const parentTitle = catMap[candidate.subCategory];
+  let parentTitle = catMap[candidate.subCategory];
   if (!parentTitle) {
     return { success: false, error: `알 수 없는 서브카테고리: ${candidate.subCategory}` };
   }
+
+  // MPS 이력인 경우 과제별 하위 섹션으로 매핑
+  if (candidate.category === 'MPS 이력') {
+    const team = extractTeamFromTitle(candidate.title);
+    if (team) {
+      const subSection = MPS_TEAM_TO_SUBSECTION[team];
+      parentTitle = `${parentTitle} > ${subSection}`;
+    }
+  }
+
   const parentId = sectionCache.get(parentTitle);
   if (!parentId) {
     return { success: false, error: `부모 페이지 ID 없음: "${parentTitle}" (setup_aa_space.js 먼저 실행)` };
@@ -476,9 +542,9 @@ async function migrateSinglePage(candidate, spaceId, sectionCache) {
     return { success: false, error: `페이지 생성 실패: ${err.message}` };
   }
 
-  // 5. 레이블 부착 (rag:source는 항상 추가, 콜론은 하이픈으로 치환)
-  const allLabels = [...new Set([...candidate.labels, 'rag:source', 'migrated-sd'])];
-  const validLabels = allLabels.map(l => l.replace(/:/g, '-'));
+  // 5. 레이블 부착 (rag-source는 항상 추가)
+  const allLabels = [...new Set([...candidate.labels, 'rag-source', 'migrated-sd'])];
+  const validLabels = allLabels;
   try {
     await addLabels(newPage.id, validLabels);
   } catch (err) {

@@ -1,0 +1,2158 @@
+{
+  "lastRun": "2026-06-15T06:58:03.194Z",
+  "totalMigrated": 133,
+  "log": [
+    {
+      "sourcePageId": "3342338",
+      "sourcePageTitle": "Neo Robot-Guided Dental Implant Surgery",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/3342338/Neo+Robot-Guided+Dental+Implant+Surgery",
+      "newPageId": "433848329",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433848329/Neo+Robot-Guided+Dental+Implant+Surgery",
+      "category": "프로젝트 현황",
+      "subCategory": "Device 프로젝트",
+      "labels": [
+        "team:device",
+        "doctype:project-status",
+        "year:2024",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:53:55.872Z"
+    },
+    {
+      "sourcePageId": "10420256",
+      "sourcePageTitle": "Roadmap",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/10420256/Roadmap",
+      "newPageId": "434438160",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434438160/Roadmap",
+      "category": "프로젝트 현황",
+      "subCategory": "Device 프로젝트",
+      "labels": [
+        "team:device",
+        "doctype:project-status",
+        "year:2024",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:53:58.235Z"
+    },
+    {
+      "sourcePageId": "11534792",
+      "sourcePageTitle": "Quality Attributes",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/11534792/Quality+Attributes",
+      "newPageId": "434176042",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434176042/Quality+Attributes",
+      "category": "프로젝트 현황",
+      "subCategory": "Device 프로젝트",
+      "labels": [
+        "team:device",
+        "doctype:project-status",
+        "year:2024",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:00.187Z"
+    },
+    {
+      "sourcePageId": "11567616",
+      "sourcePageTitle": "Scenario based Requirements",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/11567616/Scenario+based+Requirements",
+      "newPageId": "434339907",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434339907/Scenario+based+Requirements",
+      "category": "프로젝트 현황",
+      "subCategory": "Device 프로젝트",
+      "labels": [
+        "team:device",
+        "doctype:project-status",
+        "year:2024",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:01.908Z"
+    },
+    {
+      "sourcePageId": "11665828",
+      "sourcePageTitle": "Requirementa",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/11665828/Requirementa",
+      "newPageId": "434110471",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434110471/Requirementa",
+      "category": "프로젝트 현황",
+      "subCategory": "Device 프로젝트",
+      "labels": [
+        "team:device",
+        "doctype:project-status",
+        "year:2024",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:03.889Z"
+    },
+    {
+      "sourcePageId": "34406403",
+      "sourcePageTitle": "ChapGPT 기반 대화형 로봇 개발",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/34406403/ChapGPT",
+      "newPageId": "434176065",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434176065/ChapGPT",
+      "category": "프로젝트 현황",
+      "subCategory": "Device 프로젝트",
+      "labels": [
+        "team:device",
+        "doctype:project-status",
+        "year:2024",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:05.817Z"
+    },
+    {
+      "sourcePageId": "34537548",
+      "sourcePageTitle": "GPT 기반 대화형 로봇 제어 개발 방안",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/34537548/GPT",
+      "newPageId": "433815604",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433815604/GPT",
+      "category": "프로젝트 현황",
+      "subCategory": "Device 프로젝트",
+      "labels": [
+        "team:device",
+        "doctype:project-status",
+        "year:2024",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:07.423Z"
+    },
+    {
+      "sourcePageId": "34570250",
+      "sourcePageTitle": "Robot S/W 구조 및 인터페이스 정의",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/34570250/Robot+S+W",
+      "newPageId": "433782810",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433782810/Robot+S+W",
+      "category": "프로젝트 현황",
+      "subCategory": "Device 프로젝트",
+      "labels": [
+        "team:device",
+        "doctype:project-status",
+        "year:2024",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:09.380Z"
+    },
+    {
+      "sourcePageId": "37453846",
+      "sourcePageTitle": "Neobiotech GPT 로봇 데모 시나리오",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/37453846/Neobiotech+GPT",
+      "newPageId": "434274327",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434274327/Neobiotech+GPT",
+      "category": "프로젝트 현황",
+      "subCategory": "Device 프로젝트",
+      "labels": [
+        "team:device",
+        "doctype:project-status",
+        "year:2024",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:11.325Z"
+    },
+    {
+      "sourcePageId": "37716128",
+      "sourcePageTitle": "Robot 제어를 위한 GPT Function Calling",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/37716128/Robot+GPT+Function+Calling",
+      "newPageId": "434307147",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434307147/Robot+GPT+Function+Calling",
+      "category": "프로젝트 현황",
+      "subCategory": "Device 프로젝트",
+      "labels": [
+        "team:device",
+        "doctype:project-status",
+        "year:2024",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:13.145Z"
+    },
+    {
+      "sourcePageId": "38076608",
+      "sourcePageTitle": "Neo GPT Robot 앱 개발 결과",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/38076608/Neo+GPT+Robot",
+      "newPageId": "434339930",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434339930/Neo+GPT+Robot",
+      "category": "프로젝트 현황",
+      "subCategory": "Device 프로젝트",
+      "labels": [
+        "team:device",
+        "doctype:project-status",
+        "year:2024",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:14.818Z"
+    },
+    {
+      "sourcePageId": "42074222",
+      "sourcePageTitle": "Voice Robot Arm Control with Confirmation",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/42074222/Voice+Robot+Arm+Control+with+Confirmation",
+      "newPageId": "434307170",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434307170/Voice+Robot+Arm+Control+with+Confirmation",
+      "category": "프로젝트 현황",
+      "subCategory": "Device 프로젝트",
+      "labels": [
+        "team:device",
+        "doctype:project-status",
+        "year:2024",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:16.589Z"
+    },
+    {
+      "sourcePageId": "42696736",
+      "sourcePageTitle": "음성 명령 상시 Listening 및 Wake word 적용 검토",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/42696736/Listening+Wake+word",
+      "newPageId": "433913952",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433913952/Listening+Wake+word",
+      "category": "프로젝트 현황",
+      "subCategory": "Device 프로젝트",
+      "labels": [
+        "team:device",
+        "doctype:project-status",
+        "year:2024",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:18.380Z"
+    },
+    {
+      "sourcePageId": "48758785",
+      "sourcePageTitle": "음성 명령 상시 Listening 및 Wake word 적용 결과",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/48758785/Listening+Wake+word",
+      "newPageId": "434307197",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434307197/Listening+Wake+word",
+      "category": "프로젝트 현황",
+      "subCategory": "Device 프로젝트",
+      "labels": [
+        "team:device",
+        "doctype:project-status",
+        "year:2024",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:20.118Z"
+    },
+    {
+      "sourcePageId": "56492052",
+      "sourcePageTitle": "IR Marker Tracking Robot Development",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/56492052/IR+Marker+Tracking+Robot+Development",
+      "newPageId": "433913975",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433913975/IR+Marker+Tracking+Robot+Development",
+      "category": "프로젝트 현황",
+      "subCategory": "Device 프로젝트",
+      "labels": [
+        "team:device",
+        "doctype:project-status",
+        "year:2024",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:21.889Z"
+    },
+    {
+      "sourcePageId": "56786959",
+      "sourcePageTitle": "좌표계 고정 (강체 변환, Rigid Body Transformation)",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/56786959/Rigid+Body+Transformation",
+      "newPageId": "434438187",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434438187/Rigid+Body+Transformation",
+      "category": "프로젝트 현황",
+      "subCategory": "Device 프로젝트",
+      "labels": [
+        "team:device",
+        "doctype:project-status",
+        "year:2024",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:23.904Z"
+    },
+    {
+      "sourcePageId": "61308972",
+      "sourcePageTitle": "Basic IR Tracking (2024/10/15)",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/61308972/Basic+IR+Tracking+2024+10+15",
+      "newPageId": "434438214",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434438214/Basic+IR+Tracking+2024+10+15",
+      "category": "프로젝트 현황",
+      "subCategory": "Device 프로젝트",
+      "labels": [
+        "team:device",
+        "doctype:project-status",
+        "year:2024",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:25.844Z"
+    },
+    {
+      "sourcePageId": "62783520",
+      "sourcePageTitle": "Calibration (Vision-Robot)",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/62783520/Calibration+Vision-Robot",
+      "newPageId": "433618971",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433618971/Calibration+Vision-Robot",
+      "category": "프로젝트 현황",
+      "subCategory": "Device 프로젝트",
+      "labels": [
+        "team:device",
+        "doctype:project-status",
+        "year:2024",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:27.854Z"
+    },
+    {
+      "sourcePageId": "68649035",
+      "sourcePageTitle": "Basic Realtime IR Tracking",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/68649035/Basic+Realtime+IR+Tracking",
+      "newPageId": "433422362",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433422362/Basic+Realtime+IR+Tracking",
+      "category": "프로젝트 현황",
+      "subCategory": "Device 프로젝트",
+      "labels": [
+        "team:device",
+        "doctype:project-status",
+        "year:2024",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:29.632Z"
+    },
+    {
+      "sourcePageId": "252510243",
+      "sourcePageTitle": "ChatGPT: 치과 임플란트 수술 정확도 향상을 위한 “상용 로봇암 + S/W 부분 자동화” 제품화 제안",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/252510243/ChatGPT+S+W",
+      "newPageId": "433553422",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433553422/ChatGPT+S+W",
+      "category": "프로젝트 현황",
+      "subCategory": "Device 프로젝트",
+      "labels": [
+        "team:device",
+        "doctype:project-status",
+        "year:2025",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:31.565Z"
+    },
+    {
+      "sourcePageId": "299827217",
+      "sourcePageTitle": "2026 글로벌 R&D 수요조사_연구개발계획서",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/299827217/2026+R+D+_",
+      "newPageId": "434372627",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434372627/2026+R+D+_",
+      "category": "프로젝트 현황",
+      "subCategory": "정부과제",
+      "labels": [
+        "team:rnd",
+        "doctype:gov-project",
+        "year:2026",
+        "phase:planning",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:33.446Z"
+    },
+    {
+      "sourcePageId": "427556869",
+      "sourcePageTitle": "2026 강원지역혁신클러스터육성(R&D) 선도형 사업비",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/427556869/2026+R+D",
+      "newPageId": "433782845",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433782845/2026+R+D",
+      "category": "프로젝트 현황",
+      "subCategory": "정부과제",
+      "labels": [
+        "team:rnd",
+        "doctype:gov-project",
+        "year:2026",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:35.389Z"
+    },
+    {
+      "sourcePageId": "429260812",
+      "sourcePageTitle": "2026 중기부 소부장 참여연구원 구성",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/429260812/2026",
+      "newPageId": "434077707",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434077707/2026",
+      "category": "프로젝트 현황",
+      "subCategory": "정부과제",
+      "labels": [
+        "team:rnd",
+        "doctype:gov-project",
+        "year:2026",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:37.213Z"
+    },
+    {
+      "sourcePageId": "429457424",
+      "sourcePageTitle": "2026 글로벌기업산업기술연계 참여연구원 구성",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/429457424/2026",
+      "newPageId": "433782868",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433782868/2026",
+      "category": "프로젝트 현황",
+      "subCategory": "정부과제",
+      "labels": [
+        "team:rnd",
+        "doctype:gov-project",
+        "year:2026",
+        "status:active",
+        "rag:source"
+      ],
+      "migratedAt": "2026-06-15T06:54:39.105Z"
+    },
+    {
+      "sourcePageId": "8028175",
+      "sourcePageTitle": "Branch Strategy",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/8028175/Branch+Strategy",
+      "newPageId": "433815635",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433815635/Branch+Strategy",
+      "category": "팀 운영 가이드",
+      "subCategory": "개발 가이드라인",
+      "labels": [
+        "team:center",
+        "doctype:guideline",
+        "year:2024",
+        "status:evergreen"
+      ],
+      "migratedAt": "2026-06-15T06:54:40.861Z"
+    },
+    {
+      "sourcePageId": "9338882",
+      "sourcePageTitle": "연구소 S/W Configuration Management",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/9338882/S+W+Configuration+Management",
+      "newPageId": "434307228",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434307228/S+W+Configuration+Management",
+      "category": "팀 운영 가이드",
+      "subCategory": "개발 가이드라인",
+      "labels": [
+        "team:center",
+        "doctype:guideline",
+        "year:2024",
+        "status:evergreen"
+      ],
+      "migratedAt": "2026-06-15T06:54:42.663Z"
+    },
+    {
+      "sourcePageId": "16449538",
+      "sourcePageTitle": "CI/CD",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/16449538/CI+CD",
+      "newPageId": "433553445",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433553445/CI+CD",
+      "category": "팀 운영 가이드",
+      "subCategory": "개발 가이드라인",
+      "labels": [
+        "team:center",
+        "doctype:guideline",
+        "year:2024",
+        "status:evergreen"
+      ],
+      "migratedAt": "2026-06-15T06:54:44.611Z"
+    },
+    {
+      "sourcePageId": "336101390",
+      "sourcePageTitle": "형상 관리 계획서 (Configuration Management Plan)",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/336101390/Configuration+Management+Plan",
+      "newPageId": "433848358",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433848358/Configuration+Management+Plan",
+      "category": "팀 운영 가이드",
+      "subCategory": "개발 가이드라인",
+      "labels": [
+        "team:center",
+        "doctype:guideline",
+        "year:2026",
+        "status:evergreen"
+      ],
+      "migratedAt": "2026-06-15T06:54:46.450Z"
+    },
+    {
+      "sourcePageId": "12353538",
+      "sourcePageTitle": "Weekly MPS Evaluation & Planning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/12353538/Weekly+MPS+Evaluation+Planning",
+      "newPageId": "434438245",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434438245/Weekly+MPS+Evaluation+Planning",
+      "category": "MPS 이력",
+      "subCategory": "2026년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2026",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:54:48.388Z"
+    },
+    {
+      "sourcePageId": "282493300",
+      "sourcePageTitle": "Device - '26 1월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/282493300/Device+-+26+1+MPS",
+      "newPageId": "434176098",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434176098/Device+-+26+1+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2026년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2026",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:54:50.275Z"
+    },
+    {
+      "sourcePageId": "284885005",
+      "sourcePageTitle": "AI - '26 1월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/284885005/AI+-+26+1+MPS",
+      "newPageId": "434307253",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434307253/AI+-+26+1+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2026년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2026",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:54:52.204Z"
+    },
+    {
+      "sourcePageId": "285114381",
+      "sourcePageTitle": "SW - '26 1월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/285114381/SW+-+26+1+MPS",
+      "newPageId": "433914019",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433914019/SW+-+26+1+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2026년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2026",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:54:54.063Z"
+    },
+    {
+      "sourcePageId": "305266702",
+      "sourcePageTitle": "Device - '26 2월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/305266702/Device+-+26+2+MPS",
+      "newPageId": "433619002",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433619002/Device+-+26+2+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2026년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2026",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:54:56.049Z"
+    },
+    {
+      "sourcePageId": "305463322",
+      "sourcePageTitle": "SW - 2월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/305463322/SW+-+2+MPS",
+      "newPageId": "433586276",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433586276/SW+-+2+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2026년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2026",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:54:57.881Z"
+    },
+    {
+      "sourcePageId": "305594384",
+      "sourcePageTitle": "AI - '26 2월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/305594384/AI+-+26+2+MPS",
+      "newPageId": "433619025",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433619025/AI+-+26+2+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2026년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2026",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:54:59.877Z"
+    },
+    {
+      "sourcePageId": "328761345",
+      "sourcePageTitle": "AI - '26 3월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/328761345/AI+-+26+3+MPS",
+      "newPageId": "433422389",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433422389/AI+-+26+3+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2026년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2026",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:01.772Z"
+    },
+    {
+      "sourcePageId": "328892417",
+      "sourcePageTitle": "Device - '26 3월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/328892417/Device+-+26+3+MPS",
+      "newPageId": "434438280",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434438280/Device+-+26+3+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2026년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2026",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:03.723Z"
+    },
+    {
+      "sourcePageId": "328957956",
+      "sourcePageTitle": "SW - 3월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/328957956/SW+-+3+MPS",
+      "newPageId": "434307278",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434307278/SW+-+3+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2026년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2026",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:05.627Z"
+    },
+    {
+      "sourcePageId": "338362381",
+      "sourcePageTitle": "2026-03-05 Weekly MPS Evaluation & Planning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/338362381/2026-03-05+Weekly+MPS+Evaluation+Planning",
+      "newPageId": "434176123",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434176123/2026-03-05+Weekly+MPS+Evaluation+Planning",
+      "category": "MPS 이력",
+      "subCategory": "2026년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2026",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:07.754Z"
+    },
+    {
+      "sourcePageId": "367427611",
+      "sourcePageTitle": "2026-03-27 Weekly MPS Evaluation & Planning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/367427611/2026-03-27+Weekly+MPS+Evaluation+Planning",
+      "newPageId": "434307301",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434307301/2026-03-27+Weekly+MPS+Evaluation+Planning",
+      "category": "MPS 이력",
+      "subCategory": "2026년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2026",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:09.375Z"
+    },
+    {
+      "sourcePageId": "380895234",
+      "sourcePageTitle": "2026-04-10 Weekly MPS Evaluation & Planning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/380895234/2026-04-10+Weekly+MPS+Evaluation+Planning",
+      "newPageId": "433782905",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433782905/2026-04-10+Weekly+MPS+Evaluation+Planning",
+      "category": "MPS 이력",
+      "subCategory": "2026년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2026",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:11.370Z"
+    },
+    {
+      "sourcePageId": "396034081",
+      "sourcePageTitle": "2026-04-23 Weekly MPS Evaluation & Planning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/396034081/2026-04-23+Weekly+MPS+Evaluation+Planning",
+      "newPageId": "434438303",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434438303/2026-04-23+Weekly+MPS+Evaluation+Planning",
+      "category": "MPS 이력",
+      "subCategory": "2026년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2026",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:13.376Z"
+    },
+    {
+      "sourcePageId": "406487083",
+      "sourcePageTitle": "AI - '26 4월 월간 MPS (R&D Project Copilot 고도화)",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/406487083/AI+-+26+4+MPS+R+D+Project+Copilot",
+      "newPageId": "433619048",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433619048/AI+-+26+4+MPS+R+D+Project+Copilot",
+      "category": "MPS 이력",
+      "subCategory": "2026년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2026",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:15.366Z"
+    },
+    {
+      "sourcePageId": "406487130",
+      "sourcePageTitle": "Device - '26 4월 월간 MPS (SIDEX 준비 · 대면평가 · 협약 수정계획)",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/406487130/Device+-+26+4+MPS+SIDEX",
+      "newPageId": "434176148",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434176148/Device+-+26+4+MPS+SIDEX",
+      "category": "MPS 이력",
+      "subCategory": "2026년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2026",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:17.402Z"
+    },
+    {
+      "sourcePageId": "407273501",
+      "sourcePageTitle": "SW - '26 4월 월간 MPS (CBCT Segmentation & VD Landmark)",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/407273501/SW+-+26+4+MPS+CBCT+Segmentation+VD+Landmark",
+      "newPageId": "433422418",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433422418/SW+-+26+4+MPS+CBCT+Segmentation+VD+Landmark",
+      "category": "MPS 이력",
+      "subCategory": "2026년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2026",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:19.205Z"
+    },
+    {
+      "sourcePageId": "410583041",
+      "sourcePageTitle": "2026-05-07 Weekly MPS Evaluation & Planning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/410583041/2026-05-07+Weekly+MPS+Evaluation+Planning",
+      "newPageId": "434208803",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434208803/2026-05-07+Weekly+MPS+Evaluation+Planning",
+      "category": "MPS 이력",
+      "subCategory": "2026년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2026",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:21.101Z"
+    },
+    {
+      "sourcePageId": "428802049",
+      "sourcePageTitle": "2026-05-27 Weekly MPS Evaluation & Planning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/428802049/2026-05-27+Weekly+MPS+Evaluation+Planning",
+      "newPageId": "433914068",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433914068/2026-05-27+Weekly+MPS+Evaluation+Planning",
+      "category": "MPS 이력",
+      "subCategory": "2026년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2026",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:23.033Z"
+    },
+    {
+      "sourcePageId": "42336291",
+      "sourcePageTitle": "2004-07-25 Demo",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/42336291/2004-07-25+Demo",
+      "newPageId": "434274375",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434274375/2004-07-25+Demo",
+      "category": "MPS 이력",
+      "subCategory": "2024년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2024",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:25.217Z"
+    },
+    {
+      "sourcePageId": "55836717",
+      "sourcePageTitle": "[ MPS Planning ] All on X - 크라운 오차 보정 기술 Feasibility Test",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/55836717/MPS+Planning+All+on+X+-+Feasibility+Test",
+      "newPageId": "434208844",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434208844/MPS+Planning+All+on+X+-+Feasibility+Test",
+      "category": "MPS 이력",
+      "subCategory": "2024년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2024",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:27.138Z"
+    },
+    {
+      "sourcePageId": "85819412",
+      "sourcePageTitle": "2024-11-22 (W47)",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/85819412/2024-11-22+W47",
+      "newPageId": "434372656",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434372656/2024-11-22+W47",
+      "category": "MPS 이력",
+      "subCategory": "2024년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2024",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:28.875Z"
+    },
+    {
+      "sourcePageId": "95289345",
+      "sourcePageTitle": "2024-12-2",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/95289345/2024-12-2",
+      "newPageId": "433422453",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433422453/2024-12-2",
+      "category": "MPS 이력",
+      "subCategory": "2024년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2024",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:30.708Z"
+    },
+    {
+      "sourcePageId": "302972929",
+      "sourcePageTitle": "2024-12-11 Weekly MPS Evaluation & Planning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/302972929/2024-12-11+Weekly+MPS+Evaluation+Planning",
+      "newPageId": "434077738",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434077738/2024-12-11+Weekly+MPS+Evaluation+Planning",
+      "category": "MPS 이력",
+      "subCategory": "2024년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2024",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:32.576Z"
+    },
+    {
+      "sourcePageId": "161808562",
+      "sourcePageTitle": "2025-06-11 Progress",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/161808562/2025-06-11+Progress",
+      "newPageId": "433586299",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433586299/2025-06-11+Progress",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:34.434Z"
+    },
+    {
+      "sourcePageId": "163119267",
+      "sourcePageTitle": "TF Kick-off 사전 미팅 (2025-06-18)",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/163119267/TF+Kick-off+2025-06-18",
+      "newPageId": "433422482",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433422482/TF+Kick-off+2025-06-18",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:36.294Z"
+    },
+    {
+      "sourcePageId": "163775118",
+      "sourcePageTitle": "2025-06-18 회의록",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/163775118/2025-06-18",
+      "newPageId": "434208875",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434208875/2025-06-18",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:38.103Z"
+    },
+    {
+      "sourcePageId": "163775191",
+      "sourcePageTitle": "2025-06-18 Progress",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/163775191/2025-06-18+Progress",
+      "newPageId": "433586324",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433586324/2025-06-18+Progress",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:39.992Z"
+    },
+    {
+      "sourcePageId": "164889207",
+      "sourcePageTitle": "2025-06-23 RAG 시스템 현황 분석 및 문제점 도출",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/164889207/2025-06-23+RAG",
+      "newPageId": "433356902",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433356902/2025-06-23+RAG",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:41.985Z"
+    },
+    {
+      "sourcePageId": "166133793",
+      "sourcePageTitle": "AI TF Kick-off (2025-06-25)",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/166133793/AI+TF+Kick-off+2025-06-25",
+      "newPageId": "434176187",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434176187/AI+TF+Kick-off+2025-06-25",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:43.926Z"
+    },
+    {
+      "sourcePageId": "178323458",
+      "sourcePageTitle": "MPS 작성 가이드",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/178323458/MPS",
+      "newPageId": "433815664",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433815664/MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:45.745Z"
+    },
+    {
+      "sourcePageId": "178323544",
+      "sourcePageTitle": "Device - 7월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/178323544/Device+-+7+MPS",
+      "newPageId": "433422505",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433422505/Device+-+7+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:47.509Z"
+    },
+    {
+      "sourcePageId": "178356236",
+      "sourcePageTitle": "2025-07-16 Weekly MPS Evaluation & Planning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/178356236/2025-07-16+Weekly+MPS+Evaluation+Planning",
+      "newPageId": "433422528",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433422528/2025-07-16+Weekly+MPS+Evaluation+Planning",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:49.483Z"
+    },
+    {
+      "sourcePageId": "178421981",
+      "sourcePageTitle": "R&D - 7월 월간 MPS (4주차 이후)",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/178421981/R+D+-+7+MPS+4",
+      "newPageId": "433422573",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433422573/R+D+-+7+MPS+4",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:51.264Z"
+    },
+    {
+      "sourcePageId": "178454678",
+      "sourcePageTitle": "MPS 작성 Process",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/178454678/MPS+Process",
+      "newPageId": "434110494",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434110494/MPS+Process",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:53.147Z"
+    },
+    {
+      "sourcePageId": "178520103",
+      "sourcePageTitle": "SW-7월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/178520103/SW-7+MPS",
+      "newPageId": "433586349",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433586349/SW-7+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:54.966Z"
+    },
+    {
+      "sourcePageId": "181207042",
+      "sourcePageTitle": "TF Data/Agent/System Meeting (2025-07-25)",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/181207042/TF+Data+Agent+System+Meeting+2025-07-25",
+      "newPageId": "433815693",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433815693/TF+Data+Agent+System+Meeting+2025-07-25",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:56.785Z"
+    },
+    {
+      "sourcePageId": "186220545",
+      "sourcePageTitle": "2025-07-23 Weekly MPS Evaluation & Planning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/186220545/2025-07-23+Weekly+MPS+Evaluation+Planning",
+      "newPageId": "434143296",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434143296/2025-07-23+Weekly+MPS+Evaluation+Planning",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:55:58.797Z"
+    },
+    {
+      "sourcePageId": "187334744",
+      "sourcePageTitle": "2025-08-07 Weekly MPS Evaluation & Planning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/187334744/2025-08-07+Weekly+MPS+Evaluation+Planning",
+      "newPageId": "433815720",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433815720/2025-08-07+Weekly+MPS+Evaluation+Planning",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:00.759Z"
+    },
+    {
+      "sourcePageId": "188416001",
+      "sourcePageTitle": "SW-8월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/188416001/SW-8+MPS",
+      "newPageId": "434208900",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434208900/SW-8+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:02.464Z"
+    },
+    {
+      "sourcePageId": "188416043",
+      "sourcePageTitle": "Solution - 8월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/188416043/Solution+-+8+MPS",
+      "newPageId": "433914103",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433914103/Solution+-+8+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:04.233Z"
+    },
+    {
+      "sourcePageId": "188579841",
+      "sourcePageTitle": "Device - 8월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/188579841/Device+-+8+MPS",
+      "newPageId": "433422602",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433422602/Device+-+8+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:06.067Z"
+    },
+    {
+      "sourcePageId": "198049793",
+      "sourcePageTitle": "2025-08-14 Weekly MPS Evaluation & Planning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/198049793/2025-08-14+Weekly+MPS+Evaluation+Planning",
+      "newPageId": "434110519",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434110519/2025-08-14+Weekly+MPS+Evaluation+Planning",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:08.097Z"
+    },
+    {
+      "sourcePageId": "199426081",
+      "sourcePageTitle": "AI - 9월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/199426081/AI+-+9+MPS",
+      "newPageId": "434110556",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434110556/AI+-+9+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:09.883Z"
+    },
+    {
+      "sourcePageId": "199458859",
+      "sourcePageTitle": "Solution - 9월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/199458859/Solution+-+9+MPS",
+      "newPageId": "433782960",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433782960/Solution+-+9+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:11.832Z"
+    },
+    {
+      "sourcePageId": "199491585",
+      "sourcePageTitle": "SW-9월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/199491585/SW-9+MPS",
+      "newPageId": "434339967",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434339967/SW-9+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:13.714Z"
+    },
+    {
+      "sourcePageId": "199589933",
+      "sourcePageTitle": "Device - 9월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/199589933/Device+-+9+MPS",
+      "newPageId": "434110579",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434110579/Device+-+9+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:15.609Z"
+    },
+    {
+      "sourcePageId": "203980824",
+      "sourcePageTitle": "R&D MPS - 2025.09",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/203980824/R+D+MPS+-+2025.09",
+      "newPageId": "433815757",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433815757/R+D+MPS+-+2025.09",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:rnd",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:17.330Z"
+    },
+    {
+      "sourcePageId": "214926250",
+      "sourcePageTitle": "2025-09-12 Weekly MPS Evaluation & Planning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/214926250/2025-09-12+Weekly+MPS+Evaluation+Planning",
+      "newPageId": "433815786",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433815786/2025-09-12+Weekly+MPS+Evaluation+Planning",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:18.872Z"
+    },
+    {
+      "sourcePageId": "218595329",
+      "sourcePageTitle": "2025-09-26 Weekly MPS Evaluation & Planning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/218595329/2025-09-26+Weekly+MPS+Evaluation+Planning",
+      "newPageId": "434372679",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434372679/2025-09-26+Weekly+MPS+Evaluation+Planning",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:20.792Z"
+    },
+    {
+      "sourcePageId": "223379509",
+      "sourcePageTitle": "Device - 10월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/223379509/Device+-+10+MPS",
+      "newPageId": "433586378",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433586378/Device+-+10+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:22.376Z"
+    },
+    {
+      "sourcePageId": "223445106",
+      "sourcePageTitle": "SW - 10월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/223445106/SW+-+10+MPS",
+      "newPageId": "433619089",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433619089/SW+-+10+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:24.041Z"
+    },
+    {
+      "sourcePageId": "223674398",
+      "sourcePageTitle": "AI - 10월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/223674398/AI+-+10+MPS",
+      "newPageId": "433553482",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433553482/AI+-+10+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:25.914Z"
+    },
+    {
+      "sourcePageId": "223707235",
+      "sourcePageTitle": "Solution - 10월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/223707235/Solution+-+10+MPS",
+      "newPageId": "434077771",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434077771/Solution+-+10+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:27.676Z"
+    },
+    {
+      "sourcePageId": "224755714",
+      "sourcePageTitle": "2025-10-02 Weekly MPS Evaluation & Planning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/224755714/2025-10-02+Weekly+MPS+Evaluation+Planning",
+      "newPageId": "433422625",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433422625/2025-10-02+Weekly+MPS+Evaluation+Planning",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:29.550Z"
+    },
+    {
+      "sourcePageId": "238452737",
+      "sourcePageTitle": "2025-10-23 Weekly MPS Evaluation & Planning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/238452737/2025-10-23+Weekly+MPS+Evaluation+Planning",
+      "newPageId": "433815819",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433815819/2025-10-23+Weekly+MPS+Evaluation+Planning",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:31.354Z"
+    },
+    {
+      "sourcePageId": "243990563",
+      "sourcePageTitle": "Solution - 11월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/243990563/Solution+-+11+MPS",
+      "newPageId": "433914126",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433914126/Solution+-+11+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:33.108Z"
+    },
+    {
+      "sourcePageId": "244121618",
+      "sourcePageTitle": "AI - 11월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/244121618/AI+-+11+MPS",
+      "newPageId": "433586401",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433586401/AI+-+11+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:34.970Z"
+    },
+    {
+      "sourcePageId": "244350984",
+      "sourcePageTitle": "AI - 12월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/244350984/AI+-+12+MPS",
+      "newPageId": "433619118",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433619118/AI+-+12+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:36.843Z"
+    },
+    {
+      "sourcePageId": "244383745",
+      "sourcePageTitle": "SW - 11월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/244383745/SW+-+11+MPS",
+      "newPageId": "434340002",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434340002/SW+-+11+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:38.664Z"
+    },
+    {
+      "sourcePageId": "245858305",
+      "sourcePageTitle": "2025-11-03 Weekly MPS Evaluation & Planning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/245858305/2025-11-03+Weekly+MPS+Evaluation+Planning",
+      "newPageId": "433848387",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433848387/2025-11-03+Weekly+MPS+Evaluation+Planning",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:40.629Z"
+    },
+    {
+      "sourcePageId": "255426561",
+      "sourcePageTitle": "2025-11-12 Weekly MPS Evaluation & Planning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/255426561/2025-11-12+Weekly+MPS+Evaluation+Planning",
+      "newPageId": "433553505",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433553505/2025-11-12+Weekly+MPS+Evaluation+Planning",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:42.724Z"
+    },
+    {
+      "sourcePageId": "259522578",
+      "sourcePageTitle": "R&D MPS System",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/259522578/R+D+MPS+System",
+      "newPageId": "433619141",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433619141/R+D+MPS+System",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:rnd",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:44.653Z"
+    },
+    {
+      "sourcePageId": "259686423",
+      "sourcePageTitle": "MPS 작성 가이드 - update",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/259686423/MPS+-+update",
+      "newPageId": "433848412",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433848412/MPS+-+update",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:46.539Z"
+    },
+    {
+      "sourcePageId": "259850241",
+      "sourcePageTitle": "2025-11-21 Weekly MPS Evaluation & Planning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/259850241/2025-11-21+Weekly+MPS+Evaluation+Planning",
+      "newPageId": "434307366",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434307366/2025-11-21+Weekly+MPS+Evaluation+Planning",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:48.347Z"
+    },
+    {
+      "sourcePageId": "261619715",
+      "sourcePageTitle": "Device - 12월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/261619715/Device+-+12+MPS",
+      "newPageId": "434077794",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434077794/Device+-+12+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:50.130Z"
+    },
+    {
+      "sourcePageId": "261619727",
+      "sourcePageTitle": "SW - 12월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/261619727/SW+-+12+MPS",
+      "newPageId": "434208935",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434208935/SW+-+12+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:51.888Z"
+    },
+    {
+      "sourcePageId": "261685256",
+      "sourcePageTitle": "재 작성된 12월 월간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/261685256/12+MPS",
+      "newPageId": "434274422",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434274422/12+MPS",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-monthly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:53.775Z"
+    },
+    {
+      "sourcePageId": "271581185",
+      "sourcePageTitle": "2025-11-28 Weekly MPS Evaluation & Planning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/271581185/2025-11-28+Weekly+MPS+Evaluation+Planning",
+      "newPageId": "434208958",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434208958/2025-11-28+Weekly+MPS+Evaluation+Planning",
+      "category": "MPS 이력",
+      "subCategory": "2025년 월간·주간",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:55.758Z"
+    },
+    {
+      "sourcePageId": "243073067",
+      "sourcePageTitle": "Device - '26 연간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/243073067/Device+-+26+MPS",
+      "newPageId": "433422664",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433422664/Device+-+26+MPS",
+      "category": "MPS 이력",
+      "subCategory": "연간 MPS",
+      "labels": [
+        "team:center",
+        "doctype:mps-annual",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:57.377Z"
+    },
+    {
+      "sourcePageId": "243204106",
+      "sourcePageTitle": "SW - '26 연간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/243204106/SW+-+26+MPS",
+      "newPageId": "434176218",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434176218/SW+-+26+MPS",
+      "category": "MPS 이력",
+      "subCategory": "연간 MPS",
+      "labels": [
+        "team:center",
+        "doctype:mps-annual",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:56:59.285Z"
+    },
+    {
+      "sourcePageId": "243793938",
+      "sourcePageTitle": "Solution - '26 연간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/243793938/Solution+-+26+MPS",
+      "newPageId": "434110614",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434110614/Solution+-+26+MPS",
+      "category": "MPS 이력",
+      "subCategory": "연간 MPS",
+      "labels": [
+        "team:center",
+        "doctype:mps-annual",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:57:01.208Z"
+    },
+    {
+      "sourcePageId": "244154371",
+      "sourcePageTitle": "AI - '26 연간 MPS",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/244154371/AI+-+26+MPS",
+      "newPageId": "434110643",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434110643/AI+-+26+MPS",
+      "category": "MPS 이력",
+      "subCategory": "연간 MPS",
+      "labels": [
+        "team:center",
+        "doctype:mps-annual",
+        "year:2025",
+        "status:completed"
+      ],
+      "migratedAt": "2026-06-15T06:57:03.071Z"
+    },
+    {
+      "sourcePageId": "21495906",
+      "sourcePageTitle": "SIDEX 2024",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/21495906/SIDEX+2024",
+      "newPageId": "433619166",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433619166/SIDEX+2024",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "제품·시장 조사",
+      "labels": [
+        "team:center",
+        "doctype:market-survey",
+        "year:2024",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:05.003Z"
+    },
+    {
+      "sourcePageId": "138870880",
+      "sourcePageTitle": "KDX 2025 - 정민규",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/138870880/KDX+2025+-",
+      "newPageId": "433553544",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433553544/KDX+2025+-",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "제품·시장 조사",
+      "labels": [
+        "team:center",
+        "doctype:market-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:06.911Z"
+    },
+    {
+      "sourcePageId": "138969190",
+      "sourcePageTitle": "KDX 2025 - 김지수",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/138969190/KDX+2025+-",
+      "newPageId": "434077817",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434077817/KDX+2025+-",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "제품·시장 조사",
+      "labels": [
+        "team:center",
+        "doctype:market-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:08.739Z"
+    },
+    {
+      "sourcePageId": "139034665",
+      "sourcePageTitle": "KDX 2025 - 박주현",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/139034665/KDX+2025+-",
+      "newPageId": "434077842",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434077842/KDX+2025+-",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "제품·시장 조사",
+      "labels": [
+        "team:center",
+        "doctype:market-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:10.542Z"
+    },
+    {
+      "sourcePageId": "139034725",
+      "sourcePageTitle": "KDX 2025 - 심호기",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/139034725/KDX+2025+-",
+      "newPageId": "433914163",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433914163/KDX+2025+-",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "제품·시장 조사",
+      "labels": [
+        "team:center",
+        "doctype:market-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:12.310Z"
+    },
+    {
+      "sourcePageId": "118882314",
+      "sourcePageTitle": "sLM",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/118882314/sLM",
+      "newPageId": "433815882",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433815882/sLM",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:14.222Z"
+    },
+    {
+      "sourcePageId": "118882355",
+      "sourcePageTitle": "Deep Learning based Computer Vision",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/118882355/Deep+Learning+based+Computer+Vision",
+      "newPageId": "433553581",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433553581/Deep+Learning+based+Computer+Vision",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:16.137Z"
+    },
+    {
+      "sourcePageId": "140345567",
+      "sourcePageTitle": "4. MCP",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/140345567/4.+MCP",
+      "newPageId": "433815911",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433815911/4.+MCP",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:17.911Z"
+    },
+    {
+      "sourcePageId": "140378387",
+      "sourcePageTitle": "A2A & MCP",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/140378387/A2A+MCP",
+      "newPageId": "434077869",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434077869/A2A+MCP",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:19.605Z"
+    },
+    {
+      "sourcePageId": "164626445",
+      "sourcePageTitle": "GPT_API활용 RAG 테스트 문답_2",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/164626445/GPT_API+RAG+_2",
+      "newPageId": "433356943",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433356943/GPT_API+RAG+_2",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:21.595Z"
+    },
+    {
+      "sourcePageId": "164659223",
+      "sourcePageTitle": "RAG",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/164659223/RAG",
+      "newPageId": "434208991",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434208991/RAG",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:23.331Z"
+    },
+    {
+      "sourcePageId": "164659232",
+      "sourcePageTitle": "GPT_API활용 RAG 테스트 문답_1",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/164659232/GPT_API+RAG+_1",
+      "newPageId": "433586424",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433586424/GPT_API+RAG+_1",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:25.232Z"
+    },
+    {
+      "sourcePageId": "170295412",
+      "sourcePageTitle": "Confluence RAG 시스템 전체 구조 분석 및 정리",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/170295412/Confluence+RAG",
+      "newPageId": "434372730",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434372730/Confluence+RAG",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:27.076Z"
+    },
+    {
+      "sourcePageId": "177700888",
+      "sourcePageTitle": "LlamaIndex기반 RAG시스템 리뷰",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/177700888/LlamaIndex+RAG",
+      "newPageId": "434209020",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434209020/LlamaIndex+RAG",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:28.841Z"
+    },
+    {
+      "sourcePageId": "197754998",
+      "sourcePageTitle": "RAG 시스템 비교",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/197754998/RAG",
+      "newPageId": "434176253",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434176253/RAG",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:30.804Z"
+    },
+    {
+      "sourcePageId": "200081627",
+      "sourcePageTitle": "개선된 RAG 시스템 정리",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/200081627/RAG",
+      "newPageId": "433815944",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433815944/RAG",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:32.621Z"
+    },
+    {
+      "sourcePageId": "200081716",
+      "sourcePageTitle": "RAG시스템 구축 시도 및 결과 분석",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/200081716/RAG",
+      "newPageId": "433815971",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433815971/RAG",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:34.398Z"
+    },
+    {
+      "sourcePageId": "217481252",
+      "sourcePageTitle": "RAG_Chatbot 중간정리",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/217481252/RAG_Chatbot",
+      "newPageId": "434307395",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434307395/RAG_Chatbot",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:36.276Z"
+    },
+    {
+      "sourcePageId": "225509381",
+      "sourcePageTitle": "GraphRAG 구현 현황 체크리스트",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/225509381/GraphRAG",
+      "newPageId": "434077896",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434077896/GraphRAG",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:38.160Z"
+    },
+    {
+      "sourcePageId": "255852556",
+      "sourcePageTitle": "LLM Repo 정리",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/255852556/LLM+Repo",
+      "newPageId": "433783007",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433783007/LLM+Repo",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:40.144Z"
+    },
+    {
+      "sourcePageId": "260046855",
+      "sourcePageTitle": "R&D 센터용 타입별 RAG 구축 솔루션",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/260046855/R+D+RAG",
+      "newPageId": "434372767",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434372767/R+D+RAG",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:42.040Z"
+    },
+    {
+      "sourcePageId": "270172164",
+      "sourcePageTitle": "Fine-tuning",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/270172164/Fine-tuning",
+      "newPageId": "434274457",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434274457/Fine-tuning",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:43.949Z"
+    },
+    {
+      "sourcePageId": "276725792",
+      "sourcePageTitle": "Fine-tuning-detail",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/276725792/Fine-tuning-detail",
+      "newPageId": "434176284",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434176284/Fine-tuning-detail",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:45.921Z"
+    },
+    {
+      "sourcePageId": "277151752",
+      "sourcePageTitle": "Fine-tuning-학습 유형",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/277151752/Fine-tuning-",
+      "newPageId": "433914194",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433914194/Fine-tuning-",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2025",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:47.764Z"
+    },
+    {
+      "sourcePageId": "287539201",
+      "sourcePageTitle": "[논문 리뷰] 기술 요구사항 자동 추출을 위한 소형 언어 모델(SLM)의 데이터 중심 파인튜닝",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/287539201/SLM",
+      "newPageId": "433356966",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433356966/SLM",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2026",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:49.791Z"
+    },
+    {
+      "sourcePageId": "304939052",
+      "sourcePageTitle": "RAG(Base/FT_Model) 답변 비교",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/304939052/RAG+Base+FT_Model",
+      "newPageId": "434307418",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434307418/RAG+Base+FT_Model",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2026",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:51.663Z"
+    },
+    {
+      "sourcePageId": "310444114",
+      "sourcePageTitle": "FT/RAG 파이프라인 문제,원인 분석",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/310444114/FT+RAG",
+      "newPageId": "433815996",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433815996/FT+RAG",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2026",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:53.388Z"
+    },
+    {
+      "sourcePageId": "326303772",
+      "sourcePageTitle": "AI RAG Chatbot for Medical Device Regulation Expertise",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/326303772/AI+RAG+Chatbot+for+Medical+Device+Regulation+Expertise",
+      "newPageId": "434274480",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434274480/AI+RAG+Chatbot+for+Medical+Device+Regulation+Expertise",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2026",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:55.323Z"
+    },
+    {
+      "sourcePageId": "329515036",
+      "sourcePageTitle": "Base / RAG / Fine-Tuning 답변비교",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/329515036/Base+RAG+Fine-Tuning",
+      "newPageId": "433848441",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433848441/Base+RAG+Fine-Tuning",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2026",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:57.273Z"
+    },
+    {
+      "sourcePageId": "332922881",
+      "sourcePageTitle": "RAG / RAG + FT / Prompt개선 RAG 비교",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/332922881/RAG+RAG+FT+Prompt+RAG",
+      "newPageId": "433586459",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/433586459/RAG+RAG+FT+Prompt+RAG",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2026",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:57:59.630Z"
+    },
+    {
+      "sourcePageId": "341868568",
+      "sourcePageTitle": "RAG 전략 평가 보고서 (100문항 실험)",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/341868568/RAG+100",
+      "newPageId": "434372790",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434372790/RAG+100",
+      "category": "기술 조사 & 인사이트",
+      "subCategory": "AI·ML 기술",
+      "labels": [
+        "team:ai",
+        "doctype:tech-survey",
+        "year:2026",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:58:01.599Z"
+    },
+    {
+      "sourcePageId": "347668488",
+      "sourcePageTitle": "주간 업무 공유 진행 방향",
+      "sourcePageUrl": "https://neobiotech.atlassian.net/wiki/spaces/SD/pages/347668488",
+      "newPageId": "434077919",
+      "newPageUrl": "https://neobiotech.atlassian.net/wiki/spaces/AA/pages/434077919",
+      "category": "주간·월간 보고 (보관)",
+      "subCategory": "2026년",
+      "labels": [
+        "team:center",
+        "doctype:mps-weekly",
+        "year:2026",
+        "status:active"
+      ],
+      "migratedAt": "2026-06-15T06:58:03.194Z"
+    }
+  ]
+}

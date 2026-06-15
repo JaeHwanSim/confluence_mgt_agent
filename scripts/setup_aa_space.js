@@ -5,8 +5,9 @@
  * AA 스페이스 키: AA
  * 인스턴스: https://neobiotech.atlassian.net
  *
- * 실행: node scripts/setup_aa_space.js [--dry-run]
+ * 실행: node scripts/setup_aa_space.js [--dry-run] [--update]
  *   --dry-run : 실제 API 호출 없이 생성될 구조만 출력
+ *   --update  : 기존 페이지의 본문과 레이블을 업데이트 (없으면 생성)
  *
  * 필수 환경변수 (.env):
  *   CONFLUENCE_EMAIL=your@email.com
@@ -24,6 +25,7 @@ const https = require('https');
 const BASE_URL = 'https://neobiotech.atlassian.net';
 const AA_SPACE_KEY = 'AA';
 const DRY_RUN = process.argv.includes('--dry-run');
+const UPDATE = process.argv.includes('--update');
 
 const EMAIL = process.env.CONFLUENCE_EMAIL;
 const TOKEN = process.env.CONFLUENCE_TOKEN;
@@ -47,66 +49,70 @@ const AA_SPACE_TREE = {
   home: {
     title: 'AA 스페이스 운영 정책 가이드',
     body: buildHomepageBody(),
-    labels: ['doctype:guideline', 'team:center', 'status:evergreen'],
+    labels: ['doctype-guideline', 'group-center', 'status-evergreen'],
     children: [
       {
         title: 'MPS 이력',
-        body: buildSectionBody('MPS 이력', 'AI/SW/Device/Solution/R&D 팀의 연간·월간·주간 MPS 이력을 보관합니다.'),
-        labels: ['doctype:mps-monthly', 'team:center', 'status:active'],
+        body: buildSectionBody('MPS 이력', 'AI/SW/Device/Solution/R&D 과제의 연간·월간·주간 MPS 이력을 보관합니다.'),
+        labels: ['doctype-mps-monthly', 'group-center', 'status-active'],
         children: [
           {
             title: '연간 MPS',
-            body: buildSectionBody('연간 MPS', '팀별 연간 MPS 전략 계획서 (LLM이 가장 먼저 참조하는 핵심 문서)'),
-            labels: ['doctype:mps-annual', 'team:center', 'status:active', 'rag:priority'],
+            body: buildSectionBody('연간 MPS', '과제별 연간 MPS 전략 계획서 (LLM이 가장 먼저 참조하는 핵심 문서)'),
+            labels: ['doctype-mps-annual', 'group-center', 'status-active', 'rag-priority'],
             children: [],
           },
           {
             title: '2025년 월간·주간',
-            body: buildSectionBody('2025년 월간·주간', '2025년도 팀별 월간/주간 MPS 문서'),
-            labels: ['year:2025', 'team:center', 'status:completed'],
-            children: [],
+            body: buildSectionBody('2025년 월간·주간', '2025년도 과제별 월간/주간 MPS 문서'),
+            labels: ['year-2025', 'group-center', 'status-completed'],
+            children: [
+              { title: '연구소', body: buildSectionBody('연구소', '연구소 전체 월간/주간 MPS'), labels: ['group-center', 'year-2025'], children: [] },
+              { title: 'AI 과제', body: buildSectionBody('AI 과제', 'AI 과제 MPS 이력'), labels: ['group-ai', 'year-2025'], children: [] },
+              { title: 'SW 과제', body: buildSectionBody('SW 과제', 'SW 과제 MPS 이력'), labels: ['group-sw', 'year-2025'], children: [] },
+              { title: 'Device 과제', body: buildSectionBody('Device 과제', 'Device 과제 MPS 이력'), labels: ['group-device', 'year-2025'], children: [] },
+            ],
           },
           {
             title: '2026년 월간·주간',
-            body: buildSectionBody('2026년 월간·주간', '2026년도 팀별 월간/주간 MPS 문서'),
-            labels: ['year:2026', 'team:center', 'status:active'],
-            children: [],
+            body: buildSectionBody('2026년 월간·주간', '2026년도 과제별 월간/주간 MPS 문서'),
+            labels: ['year-2026', 'group-center', 'status-active'],
+            children: [
+              { title: '연구소', body: buildSectionBody('연구소', '연구소 전체 월간/주간 MPS'), labels: ['group-center', 'year-2026'], children: [] },
+              { title: 'AI 과제', body: buildSectionBody('AI 과제', 'AI 과제 MPS 이력'), labels: ['group-ai', 'year-2026'], children: [] },
+              { title: 'SW 과제', body: buildSectionBody('SW 과제', 'SW 과제 MPS 이력'), labels: ['group-sw', 'year-2026'], children: [] },
+              { title: 'Device 과제', body: buildSectionBody('Device 과제', 'Device 과제 MPS 이력'), labels: ['group-device', 'year-2026'], children: [] },
+            ],
           },
         ],
       },
       {
         title: '프로젝트 현황',
-        body: buildSectionBody('프로젝트 현황', '팀별 진행 중인 프로젝트와 정부과제 현황을 관리합니다.'),
-        labels: ['doctype:project-status', 'team:center', 'status:active'],
+        body: buildSectionBody('프로젝트 현황', '과제별 진행 중인 프로젝트와 정부과제 현황을 관리합니다.'),
+        labels: ['doctype-project-status', 'group-center', 'status-active'],
         children: [
           {
             title: '정부과제',
             body: buildSectionBody('정부과제', '진행 중인 정부 지원 과제 현황 요약'),
-            labels: ['doctype:gov-project', 'team:rnd', 'status:active'],
+            labels: ['doctype-gov-project', 'group-center', 'status-active'],
             children: [],
           },
           {
             title: 'AI 프로젝트',
-            body: buildSectionBody('AI 프로젝트', 'AI 팀 프로젝트 현황 및 로드맵'),
-            labels: ['doctype:project-status', 'team:ai', 'status:active'],
+            body: buildSectionBody('AI 프로젝트', 'AI 과제 프로젝트 현황 및 로드맵'),
+            labels: ['doctype-project-status', 'group-ai', 'status-active'],
             children: [],
           },
           {
             title: 'SW 프로젝트',
-            body: buildSectionBody('SW 프로젝트', 'SW 팀 프로젝트 현황'),
-            labels: ['doctype:project-status', 'team:sw', 'status:active'],
+            body: buildSectionBody('SW 프로젝트', 'SW 과제 프로젝트 현황'),
+            labels: ['doctype-project-status', 'group-sw', 'status-active'],
             children: [],
           },
           {
             title: 'Device 프로젝트',
-            body: buildSectionBody('Device 프로젝트', 'Device 팀 프로젝트 현황 (Neo Robot 등)'),
-            labels: ['doctype:project-status', 'team:device', 'status:active'],
-            children: [],
-          },
-          {
-            title: 'Solution 프로젝트',
-            body: buildSectionBody('Solution 프로젝트', 'Solution 팀 프로젝트 현황'),
-            labels: ['doctype:project-status', 'team:solution', 'status:active'],
+            body: buildSectionBody('Device 프로젝트', 'Device 과제 프로젝트 현황 (Neo Robot 등)'),
+            labels: ['doctype-project-status', 'group-device', 'status-active'],
             children: [],
           },
         ],
@@ -114,30 +120,30 @@ const AA_SPACE_TREE = {
       {
         title: '기술 조사 & 인사이트',
         body: buildSectionBody('기술 조사 & 인사이트', 'MPS 계획에 활용할 수 있는 기술 조사 및 시장 분석 자료'),
-        labels: ['doctype:tech-survey', 'team:center', 'status:active'],
+        labels: ['doctype-tech-survey', 'group-center', 'status-active'],
         children: [
           {
             title: 'AI·ML 기술',
             body: buildSectionBody('AI·ML 기술', 'RAG, Fine-tuning, Agent, MCP 등 AI/ML 기술 조사'),
-            labels: ['doctype:tech-survey', 'team:ai', 'status:active'],
+            labels: ['doctype-tech-survey', 'group-ai', 'status-active'],
             children: [],
           },
           {
             title: '제품·시장 조사',
             body: buildSectionBody('제품·시장 조사', '전시회 분석, 경쟁사, 치과 시장 동향'),
-            labels: ['doctype:market-survey', 'team:center', 'status:active'],
+            labels: ['doctype-market-survey', 'group-center', 'status-active'],
             children: [],
           },
           {
             title: '기술 표준 & 아키텍처',
             body: buildSectionBody('기술 표준 & 아키텍처', '소프트웨어 아키텍처, 개발 표준, 방법론'),
-            labels: ['doctype:tech-survey', 'team:sw', 'status:active'],
+            labels: ['doctype-tech-survey', 'group-sw', 'status-active'],
             children: [],
           },
           {
             title: '특허·논문 분석',
             body: buildSectionBody('특허·논문 분석', '특허 조사 및 논문 리뷰 자료'),
-            labels: ['doctype:patent', 'team:rnd', 'status:active'],
+            labels: ['doctype-patent', 'group-center', 'status-active'],
             children: [],
           },
         ],
@@ -145,24 +151,24 @@ const AA_SPACE_TREE = {
       {
         title: '팀 운영 가이드',
         body: buildSectionBody('팀 운영 가이드', 'MPS 작성 프로세스, 개발 표준, AI 활용 가이드라인'),
-        labels: ['doctype:guideline', 'team:center', 'status:evergreen'],
+        labels: ['doctype-guideline', 'group-center', 'status-evergreen'],
         children: [],
       },
       {
         title: '주간·월간 보고 (보관)',
         body: buildSectionBody('주간·월간 보고 (보관)', '팀 주간 업무 공유 보고서 (최근 1년치 보관)'),
-        labels: ['doctype:mps-weekly', 'team:center', 'status:active'],
+        labels: ['doctype-mps-weekly', 'group-center', 'status-active'],
         children: [
           {
             title: '2025년 보고',
             body: buildSectionBody('2025년 보고', '2025년 주간·월간 보고'),
-            labels: ['year:2025', 'team:center', 'doctype:mps-weekly'],
+            labels: ['year-2025', 'group-center', 'doctype-mps-weekly'],
             children: [],
           },
           {
             title: '2026년 보고',
             body: buildSectionBody('2026년 보고', '2026년 주간·월간 보고'),
-            labels: ['year:2026', 'team:center', 'doctype:mps-weekly'],
+            labels: ['year-2026', 'group-center', 'doctype-mps-weekly'],
             children: [],
           },
         ],
@@ -185,21 +191,29 @@ function buildHomepageBody() {
 <h2>레이블 체계</h2>
 <table>
   <tr><th>그룹</th><th>레이블</th><th>설명</th></tr>
-  <tr><td>팀(Team)</td><td>team:ai / team:sw / team:device / team:solution / team:rnd / team:center</td><td>문서 소유 팀</td></tr>
-  <tr><td>문서유형(DocType)</td><td>doctype:mps-annual / doctype:mps-monthly / doctype:project-status / doctype:tech-survey / doctype:guideline ...</td><td>문서 성격</td></tr>
-  <tr><td>연도(Year)</td><td>year:2024 / year:2025 / year:2026</td><td>문서 유효 연도</td></tr>
-  <tr><td>상태(Status)</td><td>status:active / status:completed / status:evergreen / status:review-needed</td><td>문서 유효성 상태</td></tr>
+  <tr><td>조직/과제</td><td>group-center / group-ai / group-sw / group-device</td><td>연구소 및 과제 그룹</td></tr>
+  <tr><td>문서유형(DocType)</td><td>doctype-mps-annual / doctype-mps-monthly / doctype-project-status / doctype-tech-survey / doctype-guideline ...</td><td>문서 성격</td></tr>
+  <tr><td>연도(Year)</td><td>year-2024 / year-2025 / year-2026</td><td>문서 유효 연도</td></tr>
+  <tr><td>상태(Status)</td><td>status-active / status-completed / status-evergreen / status-review-needed</td><td>문서 유효성 상태</td></tr>
 </table>
 <h2>명명 규칙</h2>
 <ul>
-  <li>MPS: <code>[팀] YYYY-MM 월간 MPS</code> / <code>[팀] YYYY 연간 MPS</code></li>
+  <li>MPS: <code>[과제] YYYY-MM 월간 MPS</code> / <code>[과제] YYYY 연간 MPS</code></li>
   <li>프로젝트: <code>[과제명] 현황 요약 (YYYY)</code></li>
   <li>기술 조사: <code>[주제] 기술 조사 (YYYY-MM)</code></li>
   <li>가이드라인: <code>[주제] 가이드라인 vX.X</code></li>
 </ul>
+<h2>폴더 구조</h2>
+<ul>
+  <li>MPS 이력: 연간 MPS / 연도별 월간·주간 (과제별 하위 폴더)</li>
+  <li>프로젝트 현황: 정부과제 / AI·SW·Device·Solution 과제</li>
+  <li>기술 조사 & 인사이트: AI·ML / 시장 / 표준 / 특허</li>
+  <li>팀 운영 가이드: 공통 가이드라인</li>
+  <li>주간·월간 보고 (보관): 연도별 보관</li>
+</ul>
 <h2>유효기간 정책</h2>
 <ul>
-  <li>MPS 이력: 무기한 보관 (완료 시 status:completed)</li>
+  <li>MPS 이력: 무기한 보관 (완료 시 status-completed)</li>
   <li>기술 조사: 2년 후 review-needed</li>
   <li>주간 보고: 1년 후 SD 스페이스로 이동</li>
   <li>가이드라인: evergreen (버전업 유지)</li>
@@ -313,8 +327,7 @@ async function findPageIdByTitle(title) {
  */
 async function addLabels(pageId, labels) {
   if (!labels || labels.length === 0) return;
-  const validLabels = labels.map(l => l.replace(/:/g, '-'));
-  const payload = validLabels.map(name => ({ prefix: 'global', name }));
+  const payload = labels.map(name => ({ prefix: 'global', name }));
   
   return new Promise((resolve, reject) => {
     const url = new URL(`${BASE_URL}/wiki/rest/api/content/${pageId}/label`);
@@ -343,7 +356,123 @@ async function addLabels(pageId, labels) {
 }
 
 /**
- * 재귀적으로 페이지 트리 생성
+ * 페이지의 현재 레이블 목록 조회 (v1 API)
+ * @param {string} pageId
+ * @returns {Promise<string[]>}
+ */
+async function getLabels(pageId) {
+  return new Promise((resolve) => {
+    const url = new URL(`${BASE_URL}/wiki/rest/api/content/${pageId}/label`);
+    const options = {
+      hostname: url.hostname,
+      path: url.pathname + url.search,
+      method: 'GET',
+      headers: {
+        'Authorization': AUTH_HEADER,
+        'Accept': 'application/json',
+      },
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          const parsed = JSON.parse(data);
+          resolve((parsed.results || []).map(l => l.name));
+        } catch (_) {
+          resolve([]);
+        }
+      });
+    });
+
+    req.on('error', () => resolve([]));
+    req.end();
+  });
+}
+
+/**
+ * 페이지에서 특정 레이블 삭제
+ * @param {string} pageId
+ * @param {string} labelName
+ */
+async function deleteLabel(pageId, labelName) {
+  return new Promise((resolve, reject) => {
+    const url = new URL(`${BASE_URL}/wiki/rest/api/content/${pageId}/label/${encodeURIComponent(labelName)}`);
+    const options = {
+      hostname: url.hostname,
+      path: url.pathname + url.search,
+      method: 'DELETE',
+      headers: { 'Authorization': AUTH_HEADER },
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => resolve());
+    });
+
+    req.on('error', reject);
+    req.end();
+  });
+}
+
+/**
+ * 레이블 동기화: 현재 레이블과 목표 레이블을 비교하여 추가/삭제
+ * @param {string} pageId
+ * @param {string[]} desiredLabels
+ * @param {string} indent
+ */
+async function syncLabels(pageId, desiredLabels, indent = '') {
+  const currentLabels = await getLabels(pageId);
+  const desired = new Set(desiredLabels);
+  const current = new Set(currentLabels);
+
+  const toAdd = desiredLabels.filter(l => !current.has(l));
+  const toRemove = currentLabels.filter(l => !desired.has(l));
+
+  if (toRemove.length > 0) {
+    console.log(`${indent}  🏷️  레이블 삭제: ${toRemove.join(', ')}`);
+    for (const label of toRemove) {
+      await deleteLabel(pageId, label);
+      await sleep(200);
+    }
+  }
+
+  if (toAdd.length > 0) {
+    console.log(`${indent}  🏷️  레이블 추가: ${toAdd.join(', ')}`);
+    await addLabels(pageId, toAdd);
+  }
+
+  if (toAdd.length === 0 && toRemove.length === 0) {
+    console.log(`${indent}  🏷️  레이블 변경 없음`);
+  }
+}
+
+/**
+ * 페이지 본문 업데이트
+ * @param {string} pageId
+ * @param {string} title
+ * @param {string} bodyHtml
+ */
+async function updatePageBody(pageId, title, bodyHtml) {
+  const currentPage = await confluenceRequest('GET', `/pages/${pageId}`);
+  const currentVersion = currentPage.version?.number || 1;
+
+  await confluenceRequest('PUT', `/pages/${pageId}`, {
+    id: pageId,
+    status: 'current',
+    title,
+    body: {
+      representation: 'storage',
+      value: bodyHtml,
+    },
+    version: { number: currentVersion + 1 },
+  });
+}
+
+/**
+ * 재귀적으로 페이지 트리 생성 또는 업데이트
  * @param {string} spaceId
  * @param {string} parentId
  * @param {object[]} nodes
@@ -352,8 +481,14 @@ async function addLabels(pageId, labels) {
 async function createPageTree(spaceId, parentId, nodes, indent = '') {
   for (const node of nodes) {
     if (DRY_RUN) {
-      console.log(`${indent}[DRY-RUN] 생성 예정: "${node.title}"`);
-      console.log(`${indent}          레이블: ${node.labels.join(', ')}`);
+      if (UPDATE) {
+        console.log(`${indent}[DRY-RUN] 업데이트 예정: "${node.title}"`);
+        console.log(`${indent}          본문 업데이트 + 레이블 동기화`);
+        console.log(`${indent}          목표 레이블: ${node.labels.join(', ')}`);
+      } else {
+        console.log(`${indent}[DRY-RUN] 생성 예정: "${node.title}"`);
+        console.log(`${indent}          레이블: ${node.labels.join(', ')}`);
+      }
       if (node.children && node.children.length > 0) {
         await createPageTree(spaceId, 'DUMMY_ID', node.children, indent + '  ');
       }
@@ -363,23 +498,32 @@ async function createPageTree(spaceId, parentId, nodes, indent = '') {
     try {
       console.log(`${indent}처리 중: "${node.title}"...`);
       let pageId = await findPageIdByTitle(node.title);
-      
+
       if (pageId) {
-        console.log(`${indent}✅ 존재함 (스킵): ${node.title} (id:${pageId})`);
+        if (UPDATE) {
+          // 업데이트 모드: 본문 + 레이블 동기화
+          console.log(`${indent}📝 업데이트: ${node.title} (id:${pageId})`);
+          await updatePageBody(pageId, node.title, node.body);
+          await syncLabels(pageId, node.labels, indent);
+        } else {
+          console.log(`${indent}✅ 존재함 (스킵): ${node.title} (id:${pageId})`);
+          // 레이블은 항상 부착 (기존 동작 유지)
+          if (node.labels && node.labels.length > 0) {
+            await addLabels(pageId, node.labels);
+          }
+        }
       } else {
         const page = await createPage(spaceId, parentId, node.title, node.body);
         pageId = page.id;
         console.log(`${indent}✅ 생성 완료: ${node.title} (id:${pageId})`);
-      }
-
-      // 레이블 부착 (항상 실행)
-      if (node.labels && node.labels.length > 0) {
-        await addLabels(pageId, node.labels);
+        if (node.labels && node.labels.length > 0) {
+          await addLabels(pageId, node.labels);
+        }
       }
 
       await sleep(500);
 
-      // 자식 페이지 재귀 생성
+      // 자식 페이지 재귀 생성/업데이트
       if (node.children && node.children.length > 0) {
         await createPageTree(spaceId, pageId, node.children, indent + '  ');
       }
@@ -396,8 +540,11 @@ function sleep(ms) {
 // ─── 메인 실행 ────────────────────────────────────────────────────────────────
 
 async function main() {
-  console.log('=== AA 스페이스 구조 생성 시작 ===');
-  console.log(`모드: ${DRY_RUN ? 'DRY-RUN (실제 생성 없음)' : '실제 실행'}`);
+  console.log('=== AA 스페이스 구조 생성/업데이트 시작 ===');
+  const modeDesc = DRY_RUN
+    ? (UPDATE ? 'DRY-RUN + UPDATE (업데이트 미리보기)' : 'DRY-RUN (생성 미리보기)')
+    : (UPDATE ? 'UPDATE (기존 페이지 업데이트)' : '실제 실행 (생성)');
+  console.log(`모드: ${modeDesc}`);
   console.log('');
 
   let spaceId;
@@ -426,21 +573,12 @@ async function main() {
   if (!DRY_RUN) {
     console.log('홈페이지 내용 업데이트 중...');
     try {
-      // 현재 버전 확인
-      const currentPage = await confluenceRequest('GET', `/pages/${homepageId}`);
-      const currentVersion = currentPage.version?.number || 1;
-
-      await confluenceRequest('PUT', `/pages/${homepageId}`, {
-        id: homepageId,
-        status: 'current',
-        title: AA_SPACE_TREE.home.title,
-        body: {
-          representation: 'storage',
-          value: AA_SPACE_TREE.home.body,
-        },
-        version: { number: currentVersion + 1 },
-      });
-      await addLabels(homepageId, AA_SPACE_TREE.home.labels);
+      await updatePageBody(homepageId, AA_SPACE_TREE.home.title, AA_SPACE_TREE.home.body);
+      if (UPDATE) {
+        await syncLabels(homepageId, AA_SPACE_TREE.home.labels, '');
+      } else {
+        await addLabels(homepageId, AA_SPACE_TREE.home.labels);
+      }
       console.log('✅ 홈페이지 업데이트 완료\n');
     } catch (err) {
       console.warn(`홈페이지 업데이트 실패 (무시): ${err.message}\n`);
@@ -454,9 +592,14 @@ async function main() {
   console.log('하위 페이지 구조 생성...\n');
   await createPageTree(spaceId, homepageId, AA_SPACE_TREE.home.children);
 
-  console.log('\n=== AA 스페이스 구조 생성 완료 ===');
+  console.log('\n=== AA 스페이스 구조 생성/업데이트 완료 ===');
   if (DRY_RUN) {
-    console.log('실제 생성을 원하면 --dry-run 옵션을 제거하고 실행하세요.');
+    if (UPDATE) {
+      console.log('실제 업데이트를 원하면 --dry-run 옵션을 제거하고 실행하세요.');
+      console.log('예: node scripts/setup_aa_space.js --update');
+    } else {
+      console.log('실제 생성을 원하면 --dry-run 옵션을 제거하고 실행하세요.');
+    }
   } else {
     console.log(`AA 스페이스 확인: ${BASE_URL}/wiki/spaces/${AA_SPACE_KEY}/overview`);
   }

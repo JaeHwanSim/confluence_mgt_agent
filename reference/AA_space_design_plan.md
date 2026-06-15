@@ -42,19 +42,24 @@ LLM/RAG 기반 MPS 자동화 워크플로우의 데이터 원천으로 사용하
 ├── 📄 [홈] 스페이스 소개 & 정책 가이드
 │
 ├── 📁 MPS 이력 ─────────────────────── [1단계]
-│   ├── 📁 연간 MPS              ← 핵심 참조 문서 (LLM 우선 참조, rag:priority 레이블)
-│   │   ├── 📄 [AI팀] 2025 연간 MPS
-│   │   ├── 📄 [SW팀] 2025 연간 MPS
-│   │   ├── 📄 [Device팀] 2025 연간 MPS
-│   │   └── 📄 [팀] 2026 연간 MPS ...
+│   ├── 📁 연간 MPS              ← 핵심 참조 문서 (LLM 우선 참조, rag-priority 레이블)
+│   │   ├── 📄 [AI] 2025 연간 MPS
+│   │   ├── 📄 [SW] 2025 연간 MPS
+│   │   ├── 📄 [Device] 2025 연간 MPS
+│   │   └── 📄 [전체] 2026 연간 MPS ...
 │   ├── 📁 2025년 월간·주간
-│   │   ├── 📄 [AI팀] 2025-07 월간 MPS
-│   │   └── ... (팀별·월별·주간별 페이지)
+│   │   ├── 📁 연구소           ← 연구소 전체 월간/주간 MPS
+│   │   ├── 📁 AI 과제
+│   │   ├── 📁 SW 과제
+│   │   └── 📁 Device 과제
 │   └── 📁 2026년 월간·주간
-│       └── 📄 [AI팀] 2026-01 월간 MPS ...
+│       ├── 📁 연구소
+│       ├── 📁 AI 과제
+│       ├── 📁 SW 과제
+│       └── 📁 Device 과제
 │
 ├── 📁 프로젝트 현황 ─────────────────── [1단계]
-│   ├── 📁 정부과제              ← 전체 이관 (단계별 세부 레이블 + rag:source)
+│   ├── 📁 정부과제              ← 전체 이관 (단계별 세부 레이블 + rag-source)
 │   │   ├── 📄 2026 강원지역혁신클러스터 (기획/구현/검증 단계 문서 포함)
 │   │   ├── 📄 2026 글로벌기업산업기술연계
 │   │   └── 📄 2026 중기부 소부장
@@ -62,9 +67,8 @@ LLM/RAG 기반 MPS 자동화 워크플로우의 데이터 원천으로 사용하
 │   │   ├── 📄 AI 과제 관리 시스템 현황
 │   │   └── 📄 개발효율화 자율개발시스템 현황
 │   ├── 📁 SW 프로젝트
-│   ├── 📁 Device 프로젝트      ← Neo Robot-Guided 전체 이관 (진행 중, 이관 후 검토 예정)
-│   │   └── 📄 Neo Robot-Guided Dental Implant Surgery 관련 전체
-│   └── 📁 Solution 프로젝트
+│   └── 📁 Device 프로젝트      ← Neo Robot-Guided 전체 이관 (진행 중, 이관 후 검토 예정)
+│       └── 📄 Neo Robot-Guided Dental Implant Surgery 관련 전체
 │
 ├── 📁 기술 조사 & 인사이트 ─────────── [1단계]
 │   ├── 📁 AI·ML 기술
@@ -146,7 +150,7 @@ LLM/RAG 기반 MPS 자동화 워크플로우의 데이터 원천으로 사용하
 
 > [!NOTE]
 > **"evergreen" 예외**: 작성일이 오래되었더라도 팀 방향성·개발 철학을 담은 문서는  
-> `status:evergreen` 레이블을 붙여 예외적으로 이관합니다.  
+> `status-evergreen` 레이블을 붙여 예외적으로 이관합니다.  
 > (예: How To Develop 폴더의 Git 전략 가이드, 개발 방법론 등)
 
 ---
@@ -164,47 +168,45 @@ LLM/RAG 기반 MPS 자동화 워크플로우의 데이터 원천으로 사용하
 
 모든 AA 스페이스 페이지는 아래 4가지 레이블 그룹에서 **최소 1개씩, 총 3개 이상** 부착합니다.
 
-### 3-1. 팀(Team) 레이블
+### 3-1. 조직/과제 레이블
 
 | 레이블 | 대상 |
 |--------|------|
-| `team:ai` | AI 팀 관련 문서 |
-| `team:sw` | SW 팀 관련 문서 |
-| `team:device` | Device 팀 관련 문서 |
-| `team:solution` | Solution 팀 관련 문서 |
-| `team:rnd` | R&D 팀 관련 문서 |
-| `team:center` | 팀 공통 / 센터 전체 |
+| `group-center` | Dental AI 연구소 (실제 조직) / 공통 문서 |
+| `group-ai` | AI 과제 (가상 그룹) |
+| `group-sw` | SW 과제 (가상 그룹) |
+| `group-device` | Device 과제 (가상 그룹) |
 
 ### 3-2. 문서유형(DocType) 레이블
 
 | 레이블 | 대상 |
 |--------|------|
-| `doctype:mps-annual` | 연간 MPS |
-| `doctype:mps-monthly` | 월간 MPS |
-| `doctype:mps-weekly` | 주간 MPS/보고 |
-| `doctype:project-status` | 프로젝트 현황 |
-| `doctype:tech-survey` | 기술 조사·분석 |
-| `doctype:market-survey` | 시장·경쟁 조사 |
-| `doctype:guideline` | 가이드·프로세스 문서 |
-| `doctype:patent` | 특허·논문 |
-| `doctype:gov-project` | 정부과제 관련 |
+| `doctype-mps-annual` | 연간 MPS |
+| `doctype-mps-monthly` | 월간 MPS |
+| `doctype-mps-weekly` | 주간 MPS/보고 |
+| `doctype-project-status` | 프로젝트 현황 |
+| `doctype-tech-survey` | 기술 조사·분석 |
+| `doctype-market-survey` | 시장·경쟁 조사 |
+| `doctype-guideline` | 가이드·프로세스 문서 |
+| `doctype-patent` | 특허·논문 |
+| `doctype-gov-project` | 정부과제 관련 |
 
 ### 3-3. 연도(Year) 레이블
 
 | 레이블 | 대상 |
 |--------|------|
-| `year:2024` | 2024년 생성/유효 문서 |
-| `year:2025` | 2025년 생성/유효 문서 |
-| `year:2026` | 2026년 생성/유효 문서 |
+| `year-2024` | 2024년 생성/유효 문서 |
+| `year-2025` | 2025년 생성/유효 문서 |
+| `year-2026` | 2026년 생성/유효 문서 |
 
 ### 3-4. 상태(Status) 레이블
 
 | 레이블 | 대상 |
 |--------|------|
-| `status:active` | 현재 진행 중·유효한 문서 |
-| `status:completed` | 완료된 과제·MPS |
-| `status:evergreen` | 연도 무관 상시 참조 문서 |
-| `status:review-needed` | 유효성 재검토 필요 (6개월+ 미수정) |
+| `status-active` | 현재 진행 중·유효한 문서 |
+| `status-completed` | 완료된 과제·MPS |
+| `status-evergreen` | 연도 무관 상시 참조 문서 |
+| `status-review-needed` | 유효성 재검토 필요 (6개월+ 미수정) |
 
 ---
 
@@ -213,14 +215,14 @@ LLM/RAG 기반 MPS 자동화 워크플로우의 데이터 원천으로 사용하
 ### 4-1. MPS 문서
 
 ```
-[팀] YYYY-MM 월간 MPS
-[팀] YYYY 연간 MPS
+[과제] YYYY-MM 월간 MPS
+[과제] YYYY 연간 MPS
 [전체] YYYY-WNN 주간 보고  (NN = 주차)
 ```
 
 예시:
-- `[AI팀] 2026-01 월간 MPS`
-- `[SW팀] 2025 연간 MPS`
+- `[AI] 2026-01 월간 MPS`
+- `[SW] 2025 연간 MPS`
 - `[전체] 2026-W23 주간 보고`
 
 ### 4-2. 프로젝트 현황 문서
@@ -272,19 +274,19 @@ LLM/RAG 기반 MPS 자동화 워크플로우의 데이터 원천으로 사용하
 | 주기 | 작업 | 담당 |
 |------|------|------|
 | **월간** | 신규 이관 페이지 레이블 검증 | Dify 에이전트 |
-| **분기** | `status:active` 페이지 중 3개월+ 미수정 → `status:review-needed` 변경 | Dify 에이전트 |
+| **분기** | `status-active` 페이지 중 3개월+ 미수정 → `status-review-needed` 변경 | Dify 에이전트 |
 | **반기** | 6개월 이상 미수정 페이지 작성자에게 "유효성 확인" 알림 | Dify → Slack |
-| **연간** | 전년도 MPS 페이지 `status:completed` 처리, 구조 정비 | 스페이스 관리자 |
+| **연간** | 전년도 MPS 페이지 `status-completed` 처리, 구조 정비 | 스페이스 관리자 |
 
 ### 5-3. 문서 유형별 유효기간 정책
 
 | 문서유형 | 유효기간 | 만료 후 처리 |
 |---------|---------|-------------|
-| 월간 MPS | 무기한 | `status:completed` 레이블, 보관 |
-| 연간 MPS | 무기한 | `status:completed` 레이블, 보관 |
+| 월간 MPS | 무기한 | `status-completed` 레이블, 보관 |
+| 연간 MPS | 무기한 | `status-completed` 레이블, 보관 |
 | 주간 보고 | 1년 | 1년 경과 시 SD 스페이스로 이동 |
-| 프로젝트 현황 | 과제 종료+6개월 | `status:completed` 처리 |
-| 기술 조사 | 2년 | `status:review-needed`, 갱신 또는 삭제 |
+| 프로젝트 현황 | 과제 종료+6개월 | `status-completed` 처리 |
+| 기술 조사 | 2년 | `status-review-needed`, 갱신 또는 삭제 |
 | 가이드라인 | evergreen | 버전업 후 구버전 archived 처리 |
 | 정부과제 | 과제 종료+1년 | SD 원본만 유지 |
 
@@ -360,17 +362,17 @@ LLM/RAG 기반 MPS 자동화 워크플로우의 데이터 원천으로 사용하
 > [!NOTE]
 > **결정 2: 정부과제 이관 기준**  
 > ✅ **전체 이관** — 기획/구현/검증/릴리스 단계 문서 모두 포함  
-> RAG 소스로 활용하기 위해 `rag:source` 레이블 + `phase:planning / phase:implementation` 등 세부 레이블 부착
+> RAG 소스로 활용하기 위해 `rag-source` 레이블 + `phase-planning / phase-implementation` 등 세부 레이블 부착
 
 > [!NOTE]
 > **결정 3: Neo Robot-Guided 과제**  
 > ✅ **전체 이관** — 현재 진행 중이므로 이관 후 사용자가 직접 검토하여 불필요한 페이지 정리 예정  
-> `rag:source` 레이블 부착
+> `rag-source` 레이블 부착
 
 > [!NOTE]
 > **결정 4: MPS 폴더 구조**  
 > ✅ **연간 MPS 별도 폴더 + 연도별 월간·주간 폴더** 구조 채택  
-> - `연간 MPS`: LLM이 가장 먼저 참조하는 핵심 폴더 (`rag:priority` 레이블)  
+> - `연간 MPS`: LLM이 가장 먼저 참조하는 핵심 폴더 (`rag-priority` 레이블)  
 > - `2025년 월간·주간`, `2026년 월간·주간`: 연도별 분류
 
 > [!NOTE]

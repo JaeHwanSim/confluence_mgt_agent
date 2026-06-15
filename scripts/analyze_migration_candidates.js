@@ -116,7 +116,7 @@ function classifyPage(page, pageMap) {
     return {
       category: 'MPS 이력',
       subCategory,
-      labels: [team, docType, year ? `year:${year}` : '', 'status:completed'].filter(Boolean),
+      labels: [team, docType, year ? `year-${year}` : '', 'status-completed'].filter(Boolean),
       reason: 'MPS 문서',
     };
   }
@@ -128,7 +128,7 @@ function classifyPage(page, pageMap) {
       return {
         category: '주간·월간 보고 (보관)',
         subCategory: `${year}년`,
-        labels: ['team:center', 'doctype:mps-weekly', `year:${year}`, 'status:active'],
+        labels: ['group-center', 'doctype-mps-weekly', `year-${year}`, 'status-active'],
         reason: '주간 보고 (2025년 이후 전체)',
       };
     }
@@ -146,14 +146,14 @@ function classifyPage(page, pageMap) {
   ) {
     const year = lastModified.getFullYear();
     // 문서 성격에 따라 세부 레이블 구분
-    let subLabel = 'status:active';
-    if (/기획|계획/i.test(title)) subLabel = 'phase:planning';
-    else if (/구현|개발|검증/i.test(title)) subLabel = 'phase:implementation';
-    else if (/완료|릴리스|종료/i.test(title)) subLabel = 'status:completed';
+    let subLabel = 'status-active';
+    if (/기획|계획/i.test(title)) subLabel = 'phase-planning';
+    else if (/구현|개발|검증/i.test(title)) subLabel = 'phase-implementation';
+    else if (/완료|릴리스|종료/i.test(title)) subLabel = 'status-completed';
     return {
       category: '프로젝트 현황',
       subCategory: '정부과제',
-      labels: ['team:rnd', 'doctype:gov-project', `year:${year}`, subLabel, 'rag:source'],
+      labels: ['group-rnd', 'doctype-gov-project', `year-${year}`, subLabel, 'rag-source'],
       reason: '정부과제 전체 (RAG 소스)',
     };
   }
@@ -170,7 +170,7 @@ function classifyPage(page, pageMap) {
     return {
       category: '프로젝트 현황',
       subCategory: 'AI 프로젝트',
-      labels: ['team:ai', 'doctype:project-status', `year:${year}`, 'status:active'],
+      labels: ['group-ai', 'doctype-project-status', `year-${year}`, 'status-active'],
       reason: 'AI 프로젝트 현황',
     };
   }
@@ -181,7 +181,7 @@ function classifyPage(page, pageMap) {
     return {
       category: '기술 조사 & 인사이트',
       subCategory: 'AI·ML 기술',
-      labels: ['team:ai', 'doctype:tech-survey', `year:${year}`, 'status:active'],
+      labels: ['group-ai', 'doctype-tech-survey', `year-${year}`, 'status-active'],
       reason: 'AI/MCP 기술 조사',
     };
   }
@@ -196,7 +196,7 @@ function classifyPage(page, pageMap) {
     return {
       category: '프로젝트 현황',
       subCategory: 'Device 프로젝트',
-      labels: ['team:device', 'doctype:project-status', `year:${year}`, 'status:active', 'rag:source'],
+      labels: ['group-device', 'doctype-project-status', `year-${year}`, 'status-active', 'rag-source'],
       reason: 'Neo Robot 과제 전체 (진행 중, 검토 예정)',
     };
   }
@@ -213,7 +213,7 @@ function classifyPage(page, pageMap) {
     return {
       category: '기술 조사 & 인사이트',
       subCategory: 'AI·ML 기술',
-      labels: ['team:ai', 'doctype:tech-survey', `year:${year}`, 'status:active'],
+      labels: ['group-ai', 'doctype-tech-survey', `year-${year}`, 'status-active'],
       reason: 'R&D AI 기술 조사',
     };
   }
@@ -227,7 +227,7 @@ function classifyPage(page, pageMap) {
     return {
       category: '기술 조사 & 인사이트',
       subCategory: '제품·시장 조사',
-      labels: ['team:center', 'doctype:market-survey', `year:${year}`, 'status:active'],
+      labels: ['group-center', 'doctype-market-survey', `year-${year}`, 'status-active'],
       reason: '전시회/시장 조사',
     };
   }
@@ -243,7 +243,7 @@ function classifyPage(page, pageMap) {
     return {
       category: '팀 운영 가이드',
       subCategory: '개발 가이드라인',
-      labels: ['team:center', 'doctype:guideline', `year:${year}`, 'status:evergreen'],
+      labels: ['group-center', 'doctype-guideline', `year-${year}`, 'status-evergreen'],
       reason: '팀 공통 개발 가이드',
     };
   }
@@ -255,7 +255,7 @@ function classifyPage(page, pageMap) {
     return {
       category: '기술 조사 & 인사이트',
       subCategory: 'AI·ML 기술',
-      labels: ['team:ai', 'doctype:tech-survey', `year:${year}`, 'status:active'],
+      labels: ['group-ai', 'doctype-tech-survey', `year-${year}`, 'status-active'],
       reason: 'AI Evangelist 보고서',
     };
   }
@@ -293,12 +293,12 @@ function getAncestorTitles(page, pageMap) {
  */
 function detectTeam(title, ancestors) {
   const all = [title, ...ancestors].join(' ');
-  if (/AI MPS|\bAI팀\b|AI\s*MPS/i.test(all)) return 'team:ai';
-  if (/SW MPS|\bSW팀\b|SW\s*MPS/i.test(all)) return 'team:sw';
-  if (/Device\s*MPS|\bDevice팀\b/i.test(all)) return 'team:device';
-  if (/Solution\s*MPS|\bSolution팀\b/i.test(all)) return 'team:solution';
-  if (/R&D\s*MPS|\bR&D팀\b/i.test(all)) return 'team:rnd';
-  return 'team:center';
+  if (/AI MPS|\bAI팀\b|AI\s*MPS/i.test(all)) return 'group-ai';
+  if (/SW MPS|\bSW팀\b|SW\s*MPS/i.test(all)) return 'group-sw';
+  if (/Device\s*MPS|\bDevice팀\b/i.test(all)) return 'group-device';
+  if (/Solution\s*MPS|\bSolution팀\b/i.test(all)) return 'group-solution';
+  if (/R&D\s*MPS|\bR&D팀\b/i.test(all)) return 'group-rnd';
+  return 'group-center';
 }
 
 /**
@@ -307,10 +307,10 @@ function detectTeam(title, ancestors) {
  * @returns {string}
  */
 function detectMpsDocType(title) {
-  if (/연간/i.test(title)) return 'doctype:mps-annual';
-  if (/월간/i.test(title)) return 'doctype:mps-monthly';
-  if (/주간|Weekly/i.test(title)) return 'doctype:mps-weekly';
-  return 'doctype:mps-monthly';
+  if (/연간/i.test(title)) return 'doctype-mps-annual';
+  if (/월간/i.test(title)) return 'doctype-mps-monthly';
+  if (/주간|Weekly/i.test(title)) return 'doctype-mps-weekly';
+  return 'doctype-mps-monthly';
 }
 
 /**
