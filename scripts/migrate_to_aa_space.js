@@ -378,17 +378,47 @@ async function uploadAttachment(pageId, filename, mediaType, buffer) {
 }
 
 /**
- * SD 원본 페이지의 첨부파일 전체를 새 AA 페이지에 복사합니다.
- * @returns {{ oldId: string, newId: string, filename: string }[]} 이관된 첨부파일 매핑
+ * 미디어 타입이 이미지인지 판별합니다.
+ * @param {string} mediaType
+ */
+function isImageType(mediaType) {
+  return mediaType && mediaType.startsWith('image/');
+}
+
+/**
+ * 미디어 타입이 영상인지 판별합니다.
+ * @param {string} mediaType
+ */
+function isVideoType(mediaType) {
+  return mediaType && (mediaType.startsWith('video/') || mediaType.startsWith('audio/'));
+}
+
+/**
+ * SD 원본 페이지의 첨부파일 중 이미지만 새 AA 페이지에 복사합니다.
+ * 영상/오디오는 복사하지 않고 원본 링크 목록으로 반환합니다.
+ *
+ * @param {string} srcPageId
+ * @param {string} destPageId
+ * @returns {{
+ *   imageMapping: { oldId: string, newId: string, filename: string }[],
+ *   skippedVideos: { title: string, downloadUrl: string, mediaType: string }[]
+ * }}
  */
 async function copyAttachments(srcPageId, destPageId) {
   const attachments = await fetchAttachments(srcPageId);
-  if (attachments.length === 0) return [];
+  if (attachments.length === 0) return { imageMapping: [], skippedVideos: [] };
 
-  console.log(`      첨부파일 ${attachments.length}개 복사 중...`);
-  const mapping = [];
+  const images = attachments.filter(a => isImageType(a.mediaType));
+  const videos = attachments.filter(a => isVideoType(a.mediaType));
+  const others = attachments.filter(a => !isImageType(a.mediaType) && !isVideoType(a.mediaType));
 
-  for (const att of attachments) {
+  if (images.length > 0) {
+    console.log(`      이미지 ${images.length}개 복사 중 (영상 ${videos.length}개는 원본 링크 유지)...`);
+  }
+
+  const imageMapping = [];
+
+  for (const att of images) {
     const buffer = await downloadAttachment(att.downloadUrl);
     if (!buffer) {
       console.warn(`      ⚠️  다운로드 실패: ${att.title}`);
@@ -397,13 +427,25 @@ async function copyAttachments(srcPageId, destPageId) {
 
     const newAttId = await uploadAttachment(destPageId, att.title, att.mediaType, buffer);
     if (newAttId) {
-      mapping.push({ oldId: att.id, newId: newAttId, filename: att.title });
-      console.log(`      ✅ ${att.title}`);
+      imageMapping.push({ oldId: att.id, newId: newAttId, filename: att.title });
+      console.log(`      ✅ 이미지: ${att.title}`);
     }
     await sleep(ATTACH_DELAY_MS);
   }
 
-  return mapping;
+  // 기타 파일(PDF, docx 등)도 이미지처럼 복사 시도
+  for (const att of others) {
+    const buffer = await downloadAttachment(att.downloadUrl);
+    if (!buffer) continue;
+    const newAttId = await uploadAttachment(destPageId, att.title, att.mediaType, buffer);
+    if (newAttId) {
+      imageMapping.push({ oldId: att.id, newId: newAttId, filename: att.title });
+      console.log(`      ✅ 파일: ${att.title}`);
+    }
+    await sleep(ATTACH_DELAY_MS);
+  }
+
+  return { imageMapping, skippedVideos: videos };
 }
 
 // ─── 본문 변환 서비스 ─────────────────────────────────────────────────────────
@@ -418,11 +460,29 @@ function escapeHtml(str) {
 
 /**
  * 이관 배너 생성
+ * @param {object} meta
+ * @param {{ title: string, downloadUrl: string }[]} skippedVideos  복사 안 된 영상 목록
  */
-function buildBanner(meta) {
+function buildBanner(meta, skippedVideos = []) {
   const migratedAt = new Date().toISOString().split('T')[0];
   const originalDate = meta.originalCreatedAt ? meta.originalCreatedAt.split('T')[0] : '(날짜 정보 없음)';
   const labelsStr = (meta.labels || []).map(normalizeLabel).join(', ');
+
+  // 영상 원본 링크 목록 (있을 때만)
+  let videoSection = '';
+  if (skippedVideos.length > 0) {
+    const videoLinks = skippedVideos
+      .map(v => `<li><a href="${v.downloadUrl}">${escapeHtml(v.title)}</a> <em>(${v.mediaType})</em></li>`)
+      .join('');
+    videoSection = `
+        <tr>
+          <td><strong>🎬 영상/미디어 원본</strong></td>
+          <td>
+            <ul>${videoLinks}</ul>
+            <em>※ 영상 파일은 용량 문제로 복사되지 않았습니다. 위 링크를 클릭하면 원본을 볼 수 있습니다.</em>
+          </td>
+        </tr>`;
+  }
 
   return `
 <ac:structured-macro ac:name="info" ac:schema-version="1">
@@ -436,7 +496,7 @@ function buildBanner(meta) {
         <tr><td><strong>원본 최종수정일</strong></td><td>${originalDate}</td></tr>
         <tr><td><strong>이관일</strong></td><td>${migratedAt}</td></tr>
         <tr><td><strong>분류</strong></td><td>${escapeHtml(meta.category)} &gt; ${escapeHtml(meta.subCategory)}</td></tr>
-        <tr><td><strong>레이블</strong></td><td><code>${escapeHtml(labelsStr)}</code></td></tr>
+        <tr><td><strong>레이블</strong></td><td><code>${escapeHtml(labelsStr)}</code></td></tr>${videoSection}
       </tbody>
     </table>
     <p><em>※ 이 페이지는 SD 스페이스 원본을 복사한 것입니다. 원본은 SD 스페이스에서 계속 관리됩니다.</em></p>
@@ -565,7 +625,18 @@ async function migrateSinglePage(candidate, spaceId, sectionCache) {
     return { success: false, error: `원본 조회 실패: ${err.message}` };
   }
 
-  // 3. 배너 삽입
+  // 3. 첨부파일 정보 먼저 조회 (배너에 영상 링크를 포함하기 위해)
+  let skippedVideos = [];
+  let imageMapping = [];
+  if (!SKIP_ATTACHMENTS) {
+    try {
+      // 첨부파일 목록 미리 조회 (아직 복사는 안 함 - 페이지가 없으므로)
+      const attachments = await fetchAttachments(candidate.id);
+      skippedVideos = attachments.filter(a => isVideoType(a.mediaType));
+    } catch (_) {}
+  }
+
+  // 4. 배너 생성 (영상 링크 포함)
   const banner = buildBanner({
     sourcePageId: candidate.id,
     sourcePageTitle: candidate.title,
@@ -575,11 +646,11 @@ async function migrateSinglePage(candidate, spaceId, sectionCache) {
     category: candidate.category,
     subCategory: candidate.subCategory,
     labels: candidate.labels,
-  });
+  }, skippedVideos);
 
   const bodyWithBanner = banner + (detail.body || '');
 
-  // 4. AA 스페이스에 새 페이지 생성
+  // 5. AA 스페이스에 새 페이지 생성
   let newPage;
   try {
     newPage = await createPage(spaceId, parentId, candidate.title, bodyWithBanner);
@@ -587,18 +658,18 @@ async function migrateSinglePage(candidate, spaceId, sectionCache) {
     return { success: false, error: `페이지 생성 실패: ${err.message}` };
   }
 
-  // 5. 첨부파일 복사
+  // 6. 이미지 복사 (영상 제외)
   let attachmentCount = 0;
   if (!SKIP_ATTACHMENTS) {
     try {
-      const mapping = await copyAttachments(candidate.id, newPage.id);
-      attachmentCount = mapping.length;
+      const result = await copyAttachments(candidate.id, newPage.id);
+      imageMapping = result.imageMapping;
+      attachmentCount = imageMapping.length;
 
-      // 본문 내 참조 경로 수정 (첨부파일 복사 이후 페이지 업데이트)
-      if (mapping.length > 0) {
+      // 본문 내 이미지 참조 경로 수정 (복사된 이미지만 대상)
+      if (imageMapping.length > 0) {
         const fixedBody = fixBodyReferences(bodyWithBanner, candidate.id, newPage.id);
         try {
-          // 현재 버전 조회
           const currentPage = await confluenceRequest('GET', `/wiki/api/v2/pages/${newPage.id}?include-version=true`);
           const currentVersion = currentPage.version?.number || 1;
           await confluenceRequest('PUT', `/wiki/api/v2/pages/${newPage.id}`, {
@@ -609,11 +680,11 @@ async function migrateSinglePage(candidate, spaceId, sectionCache) {
             version: { number: currentVersion + 1 },
           });
         } catch (err) {
-          console.warn(`      ⚠️  본문 참조 업데이트 실패 (첨부파일은 복사됨): ${err.message}`);
+          console.warn(`      ⚠️  본문 참조 업데이트 실패 (이미지는 복사됨): ${err.message}`);
         }
       }
     } catch (err) {
-      console.warn(`      ⚠️  첨부파일 복사 실패 (페이지는 생성됨): ${err.message}`);
+      console.warn(`      ⚠️  첨부파일 처리 실패 (페이지는 생성됨): ${err.message}`);
     }
   }
 
