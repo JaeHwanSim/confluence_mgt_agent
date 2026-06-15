@@ -217,8 +217,10 @@ async function findPageIdByTitle(title) {
  * @returns {Promise<{spaceId: string, homepageId: string}>}
  */
 async function getAASpaceInfo() {
-  const data = await confluenceRequest('GET', `/wiki/api/v2/spaces/${AA_SPACE_KEY}`);
-  return { spaceId: data.id, homepageId: data.homepageId };
+  const data = await confluenceRequest('GET', `/wiki/api/v2/spaces?keys=${AA_SPACE_KEY}`);
+  if (!data.results || data.results.length === 0) throw new Error("AA 스페이스를 찾을 수 없습니다.");
+  const spaceInfo = data.results[0];
+  return { spaceId: spaceInfo.id, homepageId: spaceInfo.homepageId };
 }
 
 /**
@@ -254,8 +256,38 @@ async function createPage(spaceId, parentId, title, bodyHtml) {
  */
 async function addLabels(pageId, labels) {
   if (!labels || labels.length === 0) return;
-  const payload = labels.map(name => ({ prefix: 'global', name }));
-  await confluenceRequest('POST', `/wiki/api/v2/pages/${pageId}/labels`, payload);
+  const validLabels = labels.map(l => l.replace(/:/g, '-'));
+  const payload = validLabels.map(name => ({ prefix: 'global', name }));
+  
+  return new Promise((resolve, reject) => {
+    const url = new URL(`${BASE_URL}/wiki/rest/api/content/${pageId}/label`);
+    const options = {
+      hostname: url.hostname,
+      path: url.pathname + url.search,
+      method: 'POST',
+      headers: {
+        'Authorization': AUTH_HEADER,
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          resolve();
+        } else {
+          console.warn(`레이블 부착 경고 (v1 API): HTTP ${res.statusCode}: ${data}`);
+          resolve(); // 무시하고 진행
+        }
+      });
+    });
+
+    req.on('error', reject);
+    req.write(JSON.stringify(payload));
+    req.end();
+  });
 }
 
 // ─── 본문 변환 서비스 ─────────────────────────────────────────────────────────
@@ -444,10 +476,11 @@ async function migrateSinglePage(candidate, spaceId, sectionCache) {
     return { success: false, error: `페이지 생성 실패: ${err.message}` };
   }
 
-  // 5. 레이블 부착 (rag:source는 항상 추가)
-  const allLabels = [...new Set([...candidate.labels, 'rag:source', 'migrated:sd'])];
+  // 5. 레이블 부착 (rag:source는 항상 추가, 콜론은 하이픈으로 치환)
+  const allLabels = [...new Set([...candidate.labels, 'rag:source', 'migrated-sd'])];
+  const validLabels = allLabels.map(l => l.replace(/:/g, '-'));
   try {
-    await addLabels(newPage.id, allLabels);
+    await addLabels(newPage.id, validLabels);
   } catch (err) {
     console.warn(`    ⚠️  레이블 부착 실패 (페이지는 생성됨): ${err.message}`);
   }

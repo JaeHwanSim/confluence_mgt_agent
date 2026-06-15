@@ -293,14 +293,53 @@ async function createPage(spaceId, parentId, title, bodyHtml) {
 }
 
 /**
+ * 페이지 ID 조회 (멱등성 보장용)
+ */
+async function findPageIdByTitle(title) {
+  try {
+    const encoded = encodeURIComponent(title);
+    const data = await confluenceRequest('GET', `/pages?space-key=${AA_SPACE_KEY}&title=${encoded}&limit=5`);
+    const results = data.results || [];
+    return results.length > 0 ? results[0].id : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+/**
  * 페이지에 레이블 일괄 부착
  * @param {string} pageId
  * @param {string[]} labels
  */
 async function addLabels(pageId, labels) {
   if (!labels || labels.length === 0) return;
-  const payload = labels.map(name => ({ prefix: 'global', name }));
-  await confluenceRequest('POST', `/pages/${pageId}/labels`, payload);
+  const validLabels = labels.map(l => l.replace(/:/g, '-'));
+  const payload = validLabels.map(name => ({ prefix: 'global', name }));
+  
+  return new Promise((resolve, reject) => {
+    const url = new URL(`${BASE_URL}/wiki/rest/api/content/${pageId}/label`);
+    const options = {
+      hostname: url.hostname,
+      path: url.pathname + url.search,
+      method: 'POST',
+      headers: {
+        'Authorization': AUTH_HEADER,
+        'Content-Type': 'application/json',
+      },
+    };
+
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        resolve(); // 에러 나도 무시
+      });
+    });
+
+    req.on('error', reject);
+    req.write(JSON.stringify(payload));
+    req.end();
+  });
 }
 
 /**
@@ -322,22 +361,27 @@ async function createPageTree(spaceId, parentId, nodes, indent = '') {
     }
 
     try {
-      console.log(`${indent}생성 중: "${node.title}"...`);
-      const page = await createPage(spaceId, parentId, node.title, node.body);
-      console.log(`${indent}✅ 완료: ${page.title} (id:${page.id})`);
-
-      // 레이블 부착
-      if (node.labels && node.labels.length > 0) {
-        await addLabels(page.id, node.labels);
-        console.log(`${indent}   레이블: ${node.labels.join(', ')}`);
+      console.log(`${indent}처리 중: "${node.title}"...`);
+      let pageId = await findPageIdByTitle(node.title);
+      
+      if (pageId) {
+        console.log(`${indent}✅ 존재함 (스킵): ${node.title} (id:${pageId})`);
+      } else {
+        const page = await createPage(spaceId, parentId, node.title, node.body);
+        pageId = page.id;
+        console.log(`${indent}✅ 생성 완료: ${node.title} (id:${pageId})`);
       }
 
-      // rate limit 방지 딜레이
+      // 레이블 부착 (항상 실행)
+      if (node.labels && node.labels.length > 0) {
+        await addLabels(pageId, node.labels);
+      }
+
       await sleep(500);
 
       // 자식 페이지 재귀 생성
       if (node.children && node.children.length > 0) {
-        await createPageTree(spaceId, page.id, node.children, indent + '  ');
+        await createPageTree(spaceId, pageId, node.children, indent + '  ');
       }
     } catch (err) {
       console.error(`${indent}❌ 오류 (${node.title}): ${err.message}`);
@@ -365,7 +409,12 @@ async function main() {
     homepageId = 'DUMMY_HOME_ID';
   } else {
     console.log('AA 스페이스 홈페이지 ID 조회...');
-    const spaceInfo = await confluenceRequest('GET', `/spaces/${AA_SPACE_KEY}`);
+    const data = await confluenceRequest('GET', `/spaces?keys=${AA_SPACE_KEY}`);
+    if (!data.results || data.results.length === 0) {
+      console.error(`❌ 오류: AA 스페이스를 찾을 수 없습니다. (키: ${AA_SPACE_KEY})`);
+      process.exit(1);
+    }
+    const spaceInfo = data.results[0];
     spaceId = spaceInfo.id;
     homepageId = spaceInfo.homepageId;
     console.log(`  스페이스 ID: ${spaceId}`);
