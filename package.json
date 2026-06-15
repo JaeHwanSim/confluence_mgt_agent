@@ -6,7 +6,14 @@
     "analyze:sd": "node scripts/analyze_sd.js",
     "analyze:candidates": "node scripts/analyze_migration_candidates.js",
     "setup:aa": "node scripts/setup_aa_space.js",
-    "setup:aa:dryrun": "node scripts/setup_aa_space.js --dry-run"
+    "setup:aa:dryrun": "node scripts/setup_aa_space.js --dry-run",
+    "migrate:dryrun": "node scripts/migrate_to_aa_space.js --dry-run",
+    "migrate:all": "node scripts/migrate_to_aa_space.js",
+    "migrate:mps": "node scripts/migrate_to_aa_space.js --category=\"MPS 이력\"",
+    "migrate:project": "node scripts/migrate_to_aa_space.js --category=\"프로젝트 현황\"",
+    "migrate:tech": "node scripts/migrate_to_aa_space.js --category=\"기술 조사 & 인사이트\"",
+    "migrate:guide": "node scripts/migrate_to_aa_space.js --category=\"팀 운영 가이드\"",
+    "migrate:report": "node scripts/migrate_to_aa_space.js --category=\"주간·월간 보고 (보관)\""
   },
   "dependencies": {
     "dotenv": "^17.4.2"
