@@ -1,15 +1,18 @@
 /**
- * migrate_to_aa_space.js
+ * migrate_to_aa_space.js  (v2 - 재이관 개선판)
  *
  * SD 스페이스의 이관 후보 페이지들을 AA 스페이스로 복사합니다.
- * - 원본 SD 스페이스 페이지는 삭제하지 않습니다 (Copy 방식).
- * - 이관된 페이지 본문 최상단에 원본 메타 정보 배너를 삽입합니다.
- * - 이관 로그를 파일에 저장하여 중복 이관을 방지합니다.
- * - SOLID 원칙 준수 (단일 책임 분리)
+ *
+ * [v2 개선사항]
+ * - 레이블 형식 통일: team:X → group-X, rag:X → rag-X, doctype:X → doctype-X 등
+ * - 첨부파일(이미지 포함) 자동 복사
+ * - 본문 내 SD 페이지 ID 참조를 AA 페이지 ID로 자동 치환
+ * - 계층 구조 보장: parentId를 항상 정확히 지정
  *
  * 실행:
- *   node scripts/migrate_to_aa_space.js --dry-run   # 검증만 (실제 생성 없음)
- *   node scripts/migrate_to_aa_space.js              # 실제 이관
+ *   node scripts/migrate_to_aa_space.js --dry-run        # 검증만 (실제 생성 없음)
+ *   node scripts/migrate_to_aa_space.js                  # 실제 이관
+ *   node scripts/migrate_to_aa_space.js --skip-attachments  # 첨부파일 건너뜀
  *   node scripts/migrate_to_aa_space.js --category="MPS 이력"  # 특정 카테고리만
  *
  * 필수 환경변수 (.env):
@@ -29,8 +32,8 @@ const path = require('path');
 
 const BASE_URL = 'https://neobiotech.atlassian.net';
 const AA_SPACE_KEY = 'AA';
-const SD_SPACE_KEY = 'SD';
 const DRY_RUN = process.argv.includes('--dry-run');
+const SKIP_ATTACHMENTS = process.argv.includes('--skip-attachments');
 const CATEGORY_FILTER = (() => {
   const arg = process.argv.find(a => a.startsWith('--category='));
   return arg ? arg.split('=').slice(1).join('=') : null;
@@ -45,34 +48,56 @@ if (!DRY_RUN && (!EMAIL || !TOKEN)) {
 }
 
 const AUTH_HEADER = `Basic ${Buffer.from(`${EMAIL}:${TOKEN}`).toString('base64')}`;
-
-// 이관 로그 파일 (중복 방지용)
 const MIGRATION_LOG_PATH = path.join(__dirname, '..', 'reference', 'migration_log.json');
 
-// API 호출 사이 딜레이 (ms) - Rate Limit 방지
-const API_DELAY_MS = 700;
+// API 호출 딜레이 (Rate Limit 방지)
+const PAGE_DELAY_MS = 800;
+const ATTACH_DELAY_MS = 600;
 
-// SD → AA 카테고리-서브카테고리 → AA 부모 페이지 매핑
-// AA 스페이스의 섹션 페이지 제목과 일치해야 합니다.
-// MPS 이력은 연도+과제별 하위 섹션으로 매핑
+// ─── 레이블 형식 변환 규칙 ────────────────────────────────────────────────────
+// Confluence Cloud는 레이블에 콜론(:) 사용 불가 → 하이픈(-)으로 치환
+// team:X → group-X (prefix 변경), 나머지는 콜론만 하이픈으로
+
+const LABEL_PREFIX_MAP = {
+  'team': 'group',  // team:ai → group-ai
+};
+
+/**
+ * 레이블 문자열을 Confluence 호환 형식으로 변환합니다.
+ * @param {string} label  예: "team:ai", "doctype:mps-annual", "year:2025"
+ * @returns {string}      예: "group-ai", "doctype-mps-annual", "year-2025"
+ */
+function normalizeLabel(label) {
+  const colonIdx = label.indexOf(':');
+  if (colonIdx === -1) return label.toLowerCase().replace(/\s+/g, '-');
+
+  const prefix = label.slice(0, colonIdx);
+  const value = label.slice(colonIdx + 1);
+  const mappedPrefix = LABEL_PREFIX_MAP[prefix] || prefix;
+  return `${mappedPrefix}-${value}`.toLowerCase().replace(/\s+/g, '-');
+}
+
+// ─── SD → AA 카테고리-서브카테고리 → AA 부모 페이지 매핑 ─────────────────────
+
 const CATEGORY_TO_AA_PARENT = {
   'MPS 이력': {
-    '연간 MPS': '연간 MPS',
+    '연간 MPS':       '연간 MPS',
     '2025년 월간·주간': '2025년 월간·주간',
     '2026년 월간·주간': '2026년 월간·주간',
-    '2024년 월간·주간': '2025년 월간·주간',  // 2024년은 2025 폴더에 포함
+    '2024년 월간·주간': '2025년 월간·주간',
   },
   '프로젝트 현황': {
-    '정부과제': '정부과제',
-    'AI 프로젝트': 'AI 프로젝트',
-    'SW 프로젝트': 'SW 프로젝트',
+    '정부과제':        '정부과제',
+    'AI 프로젝트':     'AI 프로젝트',
+    'SW 프로젝트':     'SW 프로젝트',
     'Device 프로젝트': 'Device 프로젝트',
+    'Solution 프로젝트': 'Solution 프로젝트',
   },
   '기술 조사 & 인사이트': {
-    'AI·ML 기술': 'AI·ML 기술',
-    '제품·시장 조사': '제품·시장 조사',
+    'AI·ML 기술':     'AI·ML 기술',
+    '제품·시장 조사':  '제품·시장 조사',
     '기술 표준 & 아키텍처': '기술 표준 & 아키텍처',
-    '특허·논문 분석': '특허·논문 분석',
+    '특허·논문 분석':  '특허·논문 분석',
   },
   '팀 운영 가이드': {
     '개발 가이드라인': '팀 운영 가이드',
@@ -83,71 +108,39 @@ const CATEGORY_TO_AA_PARENT = {
   },
 };
 
-// MPS 문서의 과제별 하위 섹션 매핑 (제목에서 과제 추출)
-// AA 스페이스 구조: 2025년 월간·주간 > 연구소 / AI 과제 / SW 과제 / ...
-const MPS_TEAM_TO_SUBSECTION = {
-  '전체': '연구소',   // 연구소 전체 MPS
-  'AI': 'AI 과제',
-  'SW': 'SW 과제',
-  'Device': 'Device 과제',
-};
+// ─── 이관 로그 관리 ───────────────────────────────────────────────────────────
 
-/**
- * MPS 문서 제목에서 과제 팀을 추출합니다.
- * 예: "[AI] 2025-07 월간 MPS" → "AI"
- * 예: "[전체] 2025-07 월간 MPS" → "전체"
- * @param {string} title
- * @returns {string|null}
- */
-function extractTeamFromTitle(title) {
-  const match = title.match(/^\[(.+?)\]/);
-  if (!match) return null;
-  const team = match[1].trim();
-  return MPS_TEAM_TO_SUBSECTION[team] ? team : null;
-}
-
-// ─── 이관 로그 관리 (중복 방지) ───────────────────────────────────────────────
-
-/**
- * 이관 로그를 로드합니다.
- * @returns {{ migratedIds: Set<string>, log: object[] }}
- */
 function loadMigrationLog() {
   if (!fs.existsSync(MIGRATION_LOG_PATH)) {
     return { migratedIds: new Set(), log: [] };
   }
   const data = JSON.parse(fs.readFileSync(MIGRATION_LOG_PATH, 'utf8'));
+  const successEntries = (data.log || []).filter(e => !e.failed);
   return {
-    migratedIds: new Set((data.log || []).map(e => e.sourcePageId)),
+    migratedIds: new Set(successEntries.map(e => e.sourcePageId)),
     log: data.log || [],
   };
 }
 
-/**
- * 이관 결과를 로그 파일에 저장합니다.
- * @param {object[]} log
- */
 function saveMigrationLog(log) {
-  const data = {
+  fs.writeFileSync(MIGRATION_LOG_PATH, JSON.stringify({
     lastRun: new Date().toISOString(),
-    totalMigrated: log.length,
+    totalMigrated: log.filter(e => !e.failed).length,
     log,
-  };
-  fs.writeFileSync(MIGRATION_LOG_PATH, JSON.stringify(data, null, 2), 'utf8');
+  }, null, 2), 'utf8');
 }
 
 // ─── Confluence API 클라이언트 ────────────────────────────────────────────────
 
 /**
- * Confluence REST API 호출 (v2)
+ * Confluence REST API 호출
  * @param {string} method
- * @param {string} endpoint  - /wiki/api/v2/... 전체 경로
+ * @param {string} fullUrl  - 완전한 URL 또는 경로 (/wiki/api/v2/...)
  * @param {object|null} body
- * @returns {Promise<object>}
  */
-function confluenceRequest(method, endpoint, body = null) {
+function confluenceRequest(method, fullUrl, body = null) {
   return new Promise((resolve, reject) => {
-    const url = new URL(`${BASE_URL}${endpoint}`);
+    const url = new URL(fullUrl.startsWith('http') ? fullUrl : `${BASE_URL}${fullUrl}`);
     const payload = body ? JSON.stringify(body) : null;
 
     const options = {
@@ -167,10 +160,10 @@ function confluenceRequest(method, endpoint, body = null) {
       res.on('data', chunk => (data += chunk));
       res.on('end', () => {
         if (res.statusCode >= 200 && res.statusCode < 300) {
-          try { resolve(JSON.parse(data)); }
-          catch (e) { resolve(data); }
+          try { resolve(data ? JSON.parse(data) : {}); }
+          catch (e) { resolve({}); }
         } else {
-          reject(new Error(`HTTP ${res.statusCode} [${method} ${endpoint}]: ${data.slice(0, 300)}`));
+          reject(new Error(`HTTP ${res.statusCode} [${method} ${url.pathname}]: ${data.slice(0, 300)}`));
         }
       });
     });
@@ -185,49 +178,20 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-// ─── Confluence API 서비스 ────────────────────────────────────────────────────
+// ─── Confluence 페이지 서비스 ─────────────────────────────────────────────────
 
-/**
- * SD 스페이스 페이지의 실제 본문(storage HTML)을 가져옵니다.
- * @param {string} pageId
- * @returns {Promise<{body: string, version: object, authorDisplayName: string, createdAt: string}>}
- */
-async function fetchPageDetail(pageId) {
-  const data = await confluenceRequest(
-    'GET',
-    `/wiki/api/v2/pages/${pageId}?body-format=storage&include-version=true`
-  );
-  const authorId = data.version?.authorId;
-  let authorName = authorId || '(알 수 없음)';
-
-  // 작성자 이름 조회 시도
-  try {
-    const userInfo = await confluenceRequest('GET', `/wiki/rest/api/user?accountId=${authorId}`);
-    authorName = userInfo.displayName || authorName;
-  } catch (_) {
-    // 무시 - 권한 없을 경우 ID로 표시
-  }
-
-  return {
-    body: data.body?.storage?.value || '',
-    version: data.version,
-    authorDisplayName: authorName,
-    createdAt: data.version?.createdAt || '',
-  };
+/** AA 스페이스 정보 조회 */
+async function getAASpaceInfo() {
+  const data = await confluenceRequest('GET', `/wiki/api/v2/spaces?keys=${AA_SPACE_KEY}`);
+  if (!data.results || data.results.length === 0) throw new Error('AA 스페이스를 찾을 수 없습니다.');
+  return { spaceId: data.results[0].id, homepageId: data.results[0].homepageId };
 }
 
-/**
- * AA 스페이스에서 제목으로 페이지 ID를 찾습니다.
- * @param {string} title
- * @returns {Promise<string|null>}
- */
+/** 제목으로 AA 스페이스 내 페이지 ID 조회 */
 async function findPageIdByTitle(title) {
   try {
     const encoded = encodeURIComponent(title);
-    const data = await confluenceRequest(
-      'GET',
-      `/wiki/api/v2/pages?space-key=${AA_SPACE_KEY}&title=${encoded}&limit=5`
-    );
+    const data = await confluenceRequest('GET', `/wiki/api/v2/pages?space-key=${AA_SPACE_KEY}&title=${encoded}&limit=5`);
     const results = data.results || [];
     return results.length > 0 ? results[0].id : null;
   } catch (_) {
@@ -236,23 +200,28 @@ async function findPageIdByTitle(title) {
 }
 
 /**
- * AA 스페이스 정보를 가져옵니다.
- * @returns {Promise<{spaceId: string, homepageId: string}>}
+ * SD 원본 페이지 상세 정보 조회
+ * @returns {{ body: string, authorDisplayName: string, createdAt: string }}
  */
-async function getAASpaceInfo() {
-  const data = await confluenceRequest('GET', `/wiki/api/v2/spaces?keys=${AA_SPACE_KEY}`);
-  if (!data.results || data.results.length === 0) throw new Error("AA 스페이스를 찾을 수 없습니다.");
-  const spaceInfo = data.results[0];
-  return { spaceId: spaceInfo.id, homepageId: spaceInfo.homepageId };
+async function fetchPageDetail(pageId) {
+  const data = await confluenceRequest('GET', `/wiki/api/v2/pages/${pageId}?body-format=storage&include-version=true`);
+  const authorId = data.version?.authorId;
+  let authorName = authorId || '(알 수 없음)';
+
+  try {
+    const userInfo = await confluenceRequest('GET', `/wiki/rest/api/user?accountId=${authorId}`);
+    authorName = userInfo.displayName || authorName;
+  } catch (_) {}
+
+  return {
+    body: data.body?.storage?.value || '',
+    authorDisplayName: authorName,
+    createdAt: data.version?.createdAt || '',
+  };
 }
 
 /**
- * 새 페이지를 생성합니다.
- * @param {string} spaceId
- * @param {string} parentId
- * @param {string} title
- * @param {string} bodyHtml
- * @returns {Promise<{id: string, title: string, webUrl: string}>}
+ * AA 스페이스에 새 페이지 생성
  */
 async function createPage(spaceId, parentId, title, bodyHtml) {
   const result = await confluenceRequest('POST', '/wiki/api/v2/pages', {
@@ -260,10 +229,7 @@ async function createPage(spaceId, parentId, title, bodyHtml) {
     parentId,
     status: 'current',
     title,
-    body: {
-      representation: 'storage',
-      value: bodyHtml,
-    },
+    body: { representation: 'storage', value: bodyHtml },
   });
   return {
     id: result.id,
@@ -273,71 +239,192 @@ async function createPage(spaceId, parentId, title, bodyHtml) {
 }
 
 /**
- * 페이지에 레이블을 부착합니다.
- * @param {string} pageId
- * @param {string[]} labels
+ * 레이블 부착 (v1 API 사용 - v2는 POST 미지원)
  */
 async function addLabels(pageId, labels) {
   if (!labels || labels.length === 0) return;
-  const payload = labels.map(name => ({ prefix: 'global', name }));
-  
-  return new Promise((resolve, reject) => {
+  const normalizedLabels = labels.map(normalizeLabel);
+  const payload = normalizedLabels.map(name => ({ prefix: 'global', name }));
+
+  return new Promise((resolve) => {
     const url = new URL(`${BASE_URL}/wiki/rest/api/content/${pageId}/label`);
+    const body = JSON.stringify(payload);
+    const options = {
+      hostname: url.hostname,
+      path: url.pathname,
+      method: 'POST',
+      headers: {
+        Authorization: AUTH_HEADER,
+        'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(body),
+      },
+    };
+    const req = https.request(options, (res) => {
+      res.on('data', () => {});
+      res.on('end', () => resolve());
+    });
+    req.on('error', () => resolve()); // 레이블 실패는 무시
+    req.write(body);
+    req.end();
+  });
+}
+
+// ─── 첨부파일 서비스 ──────────────────────────────────────────────────────────
+
+/**
+ * SD 원본 페이지의 첨부파일 목록 조회
+ * @returns {{ id: string, title: string, mediaType: string, downloadUrl: string }[]}
+ */
+async function fetchAttachments(pageId) {
+  try {
+    const data = await confluenceRequest(
+      'GET',
+      `/wiki/rest/api/content/${pageId}/child/attachment?limit=50&expand=version`
+    );
+    return (data.results || []).map(a => ({
+      id: a.id,
+      title: a.title,
+      mediaType: a.metadata?.mediaType || 'application/octet-stream',
+      downloadUrl: `${BASE_URL}/wiki${a._links?.download || ''}`,
+    }));
+  } catch (_) {
+    return [];
+  }
+}
+
+/**
+ * 첨부파일 바이너리 다운로드
+ * @returns {Buffer|null}
+ */
+async function downloadAttachment(downloadUrl) {
+  return new Promise((resolve) => {
+    const url = new URL(downloadUrl);
     const options = {
       hostname: url.hostname,
       path: url.pathname + url.search,
+      method: 'GET',
+      headers: { Authorization: AUTH_HEADER },
+    };
+
+    const req = https.request(options, (res) => {
+      // 리다이렉트 처리
+      if (res.statusCode === 301 || res.statusCode === 302) {
+        const location = res.headers.location;
+        if (location) {
+          downloadAttachment(location).then(resolve).catch(() => resolve(null));
+          return;
+        }
+      }
+      const chunks = [];
+      res.on('data', chunk => chunks.push(chunk));
+      res.on('end', () => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          resolve(Buffer.concat(chunks));
+        } else {
+          resolve(null);
+        }
+      });
+    });
+    req.on('error', () => resolve(null));
+    req.end();
+  });
+}
+
+/**
+ * 새 페이지에 첨부파일 업로드
+ * @returns {string|null} 업로드된 첨부파일 ID
+ */
+async function uploadAttachment(pageId, filename, mediaType, buffer) {
+  return new Promise((resolve) => {
+    const boundary = `----FormBoundary${Date.now()}`;
+    const header = Buffer.from(
+      `--${boundary}\r\nContent-Disposition: form-data; name="file"; filename="${filename}"\r\nContent-Type: ${mediaType}\r\n\r\n`
+    );
+    const footer = Buffer.from(`\r\n--${boundary}--\r\n`);
+    const body = Buffer.concat([header, buffer, footer]);
+
+    const url = new URL(`${BASE_URL}/wiki/rest/api/content/${pageId}/child/attachment`);
+    const options = {
+      hostname: url.hostname,
+      path: url.pathname,
       method: 'POST',
       headers: {
-        'Authorization': AUTH_HEADER,
-        'Content-Type': 'application/json',
+        Authorization: AUTH_HEADER,
+        'X-Atlassian-Token': 'no-check',
+        'Content-Type': `multipart/form-data; boundary=${boundary}`,
+        'Content-Length': body.length,
       },
     };
 
     const req = https.request(options, (res) => {
       let data = '';
-      res.on('data', chunk => data += chunk);
+      res.on('data', chunk => (data += chunk));
       res.on('end', () => {
         if (res.statusCode >= 200 && res.statusCode < 300) {
-          resolve();
+          try {
+            const parsed = JSON.parse(data);
+            resolve(parsed.results?.[0]?.id || null);
+          } catch (_) { resolve(null); }
         } else {
-          console.warn(`레이블 부착 경고 (v1 API): HTTP ${res.statusCode}: ${data}`);
-          resolve(); // 무시하고 진행
+          console.warn(`      첨부파일 업로드 실패 (${filename}): HTTP ${res.statusCode}`);
+          resolve(null);
         }
       });
     });
-
-    req.on('error', reject);
-    req.write(JSON.stringify(payload));
+    req.on('error', () => resolve(null));
+    req.write(body);
     req.end();
   });
 }
 
+/**
+ * SD 원본 페이지의 첨부파일 전체를 새 AA 페이지에 복사합니다.
+ * @returns {{ oldId: string, newId: string, filename: string }[]} 이관된 첨부파일 매핑
+ */
+async function copyAttachments(srcPageId, destPageId) {
+  const attachments = await fetchAttachments(srcPageId);
+  if (attachments.length === 0) return [];
+
+  console.log(`      첨부파일 ${attachments.length}개 복사 중...`);
+  const mapping = [];
+
+  for (const att of attachments) {
+    const buffer = await downloadAttachment(att.downloadUrl);
+    if (!buffer) {
+      console.warn(`      ⚠️  다운로드 실패: ${att.title}`);
+      continue;
+    }
+
+    const newAttId = await uploadAttachment(destPageId, att.title, att.mediaType, buffer);
+    if (newAttId) {
+      mapping.push({ oldId: att.id, newId: newAttId, filename: att.title });
+      console.log(`      ✅ ${att.title}`);
+    }
+    await sleep(ATTACH_DELAY_MS);
+  }
+
+  return mapping;
+}
+
 // ─── 본문 변환 서비스 ─────────────────────────────────────────────────────────
 
-/**
- * 이관된 페이지 본문에 원본 메타 정보 배너를 최상단에 삽입합니다.
- *
- * @param {string} originalBody - SD 원본 페이지의 storage HTML
- * @param {object} meta         - 메타 정보
- * @param {string} meta.sourcePageId
- * @param {string} meta.sourcePageTitle
- * @param {string} meta.sourcePageUrl
- * @param {string} meta.authorDisplayName
- * @param {string} meta.originalCreatedAt
- * @param {string} meta.category
- * @param {string} meta.subCategory
- * @param {string[]} meta.labels
- * @returns {string} 배너가 삽입된 HTML
- */
-function buildBodyWithBanner(originalBody, meta) {
-  const migratedAt = new Date().toISOString().split('T')[0];
-  const originalDate = meta.originalCreatedAt
-    ? meta.originalCreatedAt.split('T')[0]
-    : '(날짜 정보 없음)';
-  const labelsStr = (meta.labels || []).join(', ');
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
 
-  // Confluence storage format 패널 (정보 박스)
-  const banner = `
+/**
+ * 이관 배너 생성
+ */
+function buildBanner(meta) {
+  const migratedAt = new Date().toISOString().split('T')[0];
+  const originalDate = meta.originalCreatedAt ? meta.originalCreatedAt.split('T')[0] : '(날짜 정보 없음)';
+  const labelsStr = (meta.labels || []).map(normalizeLabel).join(', ');
+
+  return `
 <ac:structured-macro ac:name="info" ac:schema-version="1">
   <ac:rich-text-body>
     <p><strong>📌 [AA 스페이스 이관 정보]</strong></p>
@@ -357,173 +444,129 @@ function buildBodyWithBanner(originalBody, meta) {
 </ac:structured-macro>
 <hr />
 `;
-
-  return banner + (originalBody || '');
 }
 
 /**
- * HTML 특수문자 이스케이프
- * @param {string} str
- * @returns {string}
+ * 본문 내 SD 페이지 ID 참조를 AA 페이지 ID로 치환합니다.
+ * 이미지/첨부파일 참조 경로 수정.
+ * @param {string} body        원본 HTML
+ * @param {string} srcPageId   SD 원본 페이지 ID
+ * @param {string} destPageId  AA 새 페이지 ID
  */
-function escapeHtml(str) {
-  return String(str)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;');
+function fixBodyReferences(body, srcPageId, destPageId) {
+  if (!body) return body;
+
+  return body
+    // /wiki/download/attachments/{srcPageId}/ → /wiki/download/attachments/{destPageId}/
+    .replace(
+      new RegExp(`/wiki/download/attachments/${srcPageId}/`, 'g'),
+      `/wiki/download/attachments/${destPageId}/`
+    )
+    // SD 스페이스 페이지 참조 내 space-key 변경은 하지 않음 (외부 링크는 원본 유지)
+    ;
 }
 
-// ─── 이관 후보 로더 ───────────────────────────────────────────────────────────
+// ─── 이관 후보 파서 ───────────────────────────────────────────────────────────
 
-/**
- * analyze_migration_candidates.js의 로직을 재사용하여 이관 후보 목록을 동적으로 생성합니다.
- * (reference/migration_candidates.md의 데이터 원천과 동일)
- * @returns {object[]} 이관 후보 배열
- */
-function loadMigrationCandidates() {
-  const RESULT_PATH = path.join(__dirname, 'result_json');
-  const allPages = [];
+function parseMigrationCandidatesMd() {
+  const mdPath = path.join(__dirname, '..', 'reference', 'migration_candidates.md');
+  if (!fs.existsSync(mdPath)) throw new Error('reference/migration_candidates.md 파일이 없습니다.');
 
-  for (let i = 1; i <= 3; i++) {
-    const filePath = path.join(RESULT_PATH, `sd_v2_p${i}.json`);
-    if (!fs.existsSync(filePath)) continue;
-    const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    allPages.push(...(data.results || []));
+  const content = fs.readFileSync(mdPath, 'utf8').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const lines = content.split('\n');
+  const candidates = [];
+  let currentCategory = null;
+  let currentSubCategory = null;
+  let inTable = false;
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) continue;
+
+    const catMatch = line.match(/^## (.+?) \(\d+개\)/);
+    if (catMatch) { currentCategory = catMatch[1].trim(); currentSubCategory = null; inTable = false; continue; }
+
+    const subCatMatch = line.match(/^### (.+?) \(\d+개\)/);
+    if (subCatMatch) { currentSubCategory = subCatMatch[1].trim(); inTable = false; continue; }
+
+    if (line.startsWith('| 제목') || line.startsWith('|---')) { inTable = true; continue; }
+    if (line.startsWith('#')) { inTable = false; continue; }
+
+    if (inTable && currentCategory && currentSubCategory && line.startsWith('|')) {
+      const cols = line.split('|').map(c => c.trim()).filter((_, i) => i > 0);
+      if (cols.length < 4) continue;
+
+      const titleUrlMatch = cols[0].match(/^\[(.+?)\]\((.+?)\)$/);
+      if (!titleUrlMatch) continue;
+
+      const title = titleUrlMatch[1].trim();
+      const url = titleUrlMatch[2].trim();
+      const lastModified = cols[1].trim();
+      const labelStr = cols[3] ? cols[3].replace(/\|$/, '').trim() : '';
+      const labels = labelStr.split(',').map(l => l.trim()).filter(Boolean);
+      const idMatch = url.match(/\/pages\/(\d+)/);
+      const id = idMatch ? idMatch[1] : null;
+
+      if (id && title) {
+        candidates.push({ id, title, url, lastModified, labels, category: currentCategory, subCategory: currentSubCategory });
+      }
+    }
   }
 
-  if (allPages.length === 0) {
-    throw new Error(
-      'SD 스페이스 데이터(scripts/result_json/sd_v2_p*.json)가 없습니다.\n' +
-      '먼저 SD 스페이스 데이터를 수집해주세요.'
-    );
-  }
-
-  // analyze_migration_candidates.js의 분류 로직을 동적으로 로드
-  const analyzeModule = require('./analyze_migration_candidates_lib');
-  return analyzeModule.extractCandidates(allPages);
+  console.log(`  migration_candidates.md에서 ${candidates.length}개 후보 파싱 완료`);
+  return candidates;
 }
 
-// ─── 이관 실행 서비스 ─────────────────────────────────────────────────────────
+// ─── 섹션 페이지 캐시 ────────────────────────────────────────────────────────
 
-/**
- * AA 스페이스의 섹션 페이지 ID 캐시를 구성합니다.
- * setup_aa_space.js로 미리 생성된 섹션 페이지들의 ID를 조회합니다.
- * @returns {Promise<Map<string, string>>} 섹션 제목 → 페이지 ID
- */
 async function buildSectionPageCache() {
   const sectionTitles = [
-    '연간 MPS',
-    '2025년 월간·주간',
-    '2026년 월간·주간',
-    '정부과제',
-    'AI 프로젝트',
-    'SW 프로젝트',
-    'Device 프로젝트',
-    'Solution 프로젝트',
-    'AI·ML 기술',
-    '제품·시장 조사',
-    '기술 표준 & 아키텍처',
-    '특허·논문 분석',
-    '팀 운영 가이드',
-    '2025년 보고',
-    '2026년 보고',
+    '연간 MPS', '2025년 월간·주간', '2026년 월간·주간',
+    '정부과제', 'AI 프로젝트', 'SW 프로젝트', 'Device 프로젝트', 'Solution 프로젝트',
+    'AI·ML 기술', '제품·시장 조사', '기술 표준 & 아키텍처', '특허·논문 분석',
+    '팀 운영 가이드', '2025년 보고', '2026년 보고',
   ];
 
-  // MPS 연도별 섹션의 과제 하위 섹션
-  const mpsYearSections = ['2025년 월간·주간', '2026년 월간·주간'];
-  const mpsTeamSections = ['연구소', 'AI 과제', 'SW 과제', 'Device 과제'];
-
   const cache = new Map();
-  console.log('AA 스페이스 섹션 페이지 ID 조회 중...');
+  console.log('  AA 스페이스 섹션 페이지 ID 조회 중...');
 
   for (const title of sectionTitles) {
     const pageId = await findPageIdByTitle(title);
     if (pageId) {
       cache.set(title, pageId);
-      console.log(`  ✅ "${title}" → ID: ${pageId}`);
+      console.log(`    ✅ "${title}" → ID: ${pageId}`);
     } else {
-      console.warn(`  ⚠️  "${title}" 페이지를 찾을 수 없습니다. setup_aa_space.js를 먼저 실행하세요.`);
+      console.warn(`    ⚠️  "${title}" 페이지를 찾을 수 없습니다. setup_aa_space.js를 먼저 실행하세요.`);
     }
     await sleep(300);
-  }
-
-  // MPS 과제별 하위 섹션 조회 (예: "2025년 월간·주간 > AI 과제")
-  console.log('\nMPS 과제별 하위 섹션 조회 중...');
-  for (const yearSection of mpsYearSections) {
-    const yearPageId = cache.get(yearSection);
-    if (!yearPageId) continue;
-
-    for (const teamSection of mpsTeamSections) {
-      const fullKey = `${yearSection} > ${teamSection}`;
-      try {
-        const encoded = encodeURIComponent(teamSection);
-        const data = await confluenceRequest(
-          'GET',
-          `/wiki/api/v2/pages?space-key=${AA_SPACE_KEY}&title=${encoded}&limit=10`
-        );
-        // 해당 제목의 페이지 중 부모가 yearSection인 것 찾기
-        const results = data.results || [];
-        const match = results.find(r => r.parentId === yearPageId);
-        if (match) {
-          cache.set(fullKey, match.id);
-          console.log(`  ✅ "${fullKey}" → ID: ${match.id}`);
-        } else {
-          console.warn(`  ⚠️  "${fullKey}" 하위 페이지를 찾을 수 없습니다.`);
-        }
-      } catch (err) {
-        console.warn(`  ⚠️  "${fullKey}" 조회 실패: ${err.message}`);
-      }
-      await sleep(300);
-    }
   }
 
   return cache;
 }
 
-/**
- * 이관 후보 하나를 AA 스페이스에 복사합니다.
- *
- * @param {object} candidate - 이관 후보 페이지 정보
- * @param {string} spaceId   - AA 스페이스 ID
- * @param {Map<string,string>} sectionCache - 섹션 제목 → 페이지 ID 캐시
- * @returns {Promise<{success: boolean, newPageId?: string, newPageUrl?: string, error?: string}>}
- */
-async function migrateSinglePage(candidate, spaceId, sectionCache) {
-  // 1. 부모 섹션 페이지 ID 결정
-  const catMap = CATEGORY_TO_AA_PARENT[candidate.category];
-  if (!catMap) {
-    return { success: false, error: `알 수 없는 카테고리: ${candidate.category}` };
-  }
-  let parentTitle = catMap[candidate.subCategory];
-  if (!parentTitle) {
-    return { success: false, error: `알 수 없는 서브카테고리: ${candidate.subCategory}` };
-  }
+// ─── 단일 페이지 이관 ────────────────────────────────────────────────────────
 
-  // MPS 이력인 경우 과제별 하위 섹션으로 매핑
-  if (candidate.category === 'MPS 이력') {
-    const team = extractTeamFromTitle(candidate.title);
-    if (team) {
-      const subSection = MPS_TEAM_TO_SUBSECTION[team];
-      parentTitle = `${parentTitle} > ${subSection}`;
-    }
-  }
+async function migrateSinglePage(candidate, spaceId, sectionCache) {
+  // 1. 부모 페이지 ID 결정
+  const catMap = CATEGORY_TO_AA_PARENT[candidate.category];
+  if (!catMap) return { success: false, error: `알 수 없는 카테고리: ${candidate.category}` };
+
+  const parentTitle = catMap[candidate.subCategory];
+  if (!parentTitle) return { success: false, error: `알 수 없는 서브카테고리: ${candidate.subCategory}` };
 
   const parentId = sectionCache.get(parentTitle);
-  if (!parentId) {
-    return { success: false, error: `부모 페이지 ID 없음: "${parentTitle}" (setup_aa_space.js 먼저 실행)` };
-  }
+  if (!parentId) return { success: false, error: `부모 페이지 ID 없음: "${parentTitle}"` };
 
-  // 2. SD 원본 페이지 상세 정보 조회
+  // 2. SD 원본 상세 조회
   let detail;
   try {
     detail = await fetchPageDetail(candidate.id);
   } catch (err) {
-    return { success: false, error: `원본 페이지 조회 실패: ${err.message}` };
+    return { success: false, error: `원본 조회 실패: ${err.message}` };
   }
 
-  // 3. 배너 삽입된 본문 생성
-  const bodyWithBanner = buildBodyWithBanner(detail.body, {
+  // 3. 배너 삽입
+  const banner = buildBanner({
     sourcePageId: candidate.id,
     sourcePageTitle: candidate.title,
     sourcePageUrl: candidate.url,
@@ -534,6 +577,8 @@ async function migrateSinglePage(candidate, spaceId, sectionCache) {
     labels: candidate.labels,
   });
 
+  const bodyWithBanner = banner + (detail.body || '');
+
   // 4. AA 스페이스에 새 페이지 생성
   let newPage;
   try {
@@ -542,19 +587,45 @@ async function migrateSinglePage(candidate, spaceId, sectionCache) {
     return { success: false, error: `페이지 생성 실패: ${err.message}` };
   }
 
-  // 5. 레이블 부착 (rag-source는 항상 추가)
-  const allLabels = [...new Set([...candidate.labels, 'rag-source', 'migrated-sd'])];
-  const validLabels = allLabels;
-  try {
-    await addLabels(newPage.id, validLabels);
-  } catch (err) {
-    console.warn(`    ⚠️  레이블 부착 실패 (페이지는 생성됨): ${err.message}`);
+  // 5. 첨부파일 복사
+  let attachmentCount = 0;
+  if (!SKIP_ATTACHMENTS) {
+    try {
+      const mapping = await copyAttachments(candidate.id, newPage.id);
+      attachmentCount = mapping.length;
+
+      // 본문 내 참조 경로 수정 (첨부파일 복사 이후 페이지 업데이트)
+      if (mapping.length > 0) {
+        const fixedBody = fixBodyReferences(bodyWithBanner, candidate.id, newPage.id);
+        try {
+          // 현재 버전 조회
+          const currentPage = await confluenceRequest('GET', `/wiki/api/v2/pages/${newPage.id}?include-version=true`);
+          const currentVersion = currentPage.version?.number || 1;
+          await confluenceRequest('PUT', `/wiki/api/v2/pages/${newPage.id}`, {
+            id: newPage.id,
+            status: 'current',
+            title: candidate.title,
+            body: { representation: 'storage', value: fixedBody },
+            version: { number: currentVersion + 1 },
+          });
+        } catch (err) {
+          console.warn(`      ⚠️  본문 참조 업데이트 실패 (첨부파일은 복사됨): ${err.message}`);
+        }
+      }
+    } catch (err) {
+      console.warn(`      ⚠️  첨부파일 복사 실패 (페이지는 생성됨): ${err.message}`);
+    }
   }
+
+  // 6. 레이블 부착 (정규화된 형식으로)
+  const allLabels = [...new Set([...candidate.labels, 'rag:source', 'migrated:sd'])];
+  await addLabels(newPage.id, allLabels);
 
   return {
     success: true,
     newPageId: newPage.id,
     newPageUrl: newPage.webUrl,
+    attachmentCount,
   };
 }
 
@@ -562,31 +633,21 @@ async function migrateSinglePage(candidate, spaceId, sectionCache) {
 
 async function main() {
   console.log('========================================');
-  console.log('  AA 스페이스 이관 스크립트');
+  console.log('  AA 스페이스 이관 스크립트 v2');
   console.log('========================================');
   console.log(`모드: ${DRY_RUN ? '🔍 DRY-RUN (실제 생성 없음)' : '🚀 실제 실행'}`);
-  if (CATEGORY_FILTER) {
-    console.log(`필터: "${CATEGORY_FILTER}" 카테고리만 이관`);
-  }
+  console.log(`첨부파일: ${SKIP_ATTACHMENTS ? '⏭️  건너뜀' : '✅ 복사 포함'}`);
+  if (CATEGORY_FILTER) console.log(`필터: "${CATEGORY_FILTER}" 카테고리만 이관`);
   console.log('');
 
-  // ── 이관 후보 로드 ──────────────────────────────────────────────────────────
+  // ── 후보 목록 로드 ──────────────────────────────────────────────────────────
   console.log('[1/4] 이관 후보 목록 로드 중...');
-  let candidates;
-  try {
-    candidates = loadMigrationCandidates();
-  } catch (err) {
-    // analyze_migration_candidates_lib.js가 없는 경우 → migration_candidates.md 파싱으로 폴백
-    console.warn(`  경고: ${err.message}`);
-    console.warn('  → reference/migration_candidates.md에서 직접 후보를 파싱합니다.');
-    candidates = parseMigrationCandidatesMd();
-  }
+  let candidates = parseMigrationCandidatesMd();
 
   if (CATEGORY_FILTER) {
     candidates = candidates.filter(c => c.category === CATEGORY_FILTER);
   }
 
-  // 이미 이관된 페이지 제외
   const { migratedIds, log: existingLog } = loadMigrationLog();
   const toMigrate = candidates.filter(c => !migratedIds.has(c.id));
   const skipped = candidates.length - toMigrate.length;
@@ -601,28 +662,24 @@ async function main() {
   }
 
   if (DRY_RUN) {
-    // ── DRY-RUN: 예정 목록만 출력 ────────────────────────────────────────────
-    console.log('[DRY-RUN] 이관 예정 목록:');
-    console.log('');
     const byCategory = {};
     toMigrate.forEach(c => {
       const key = `${c.category} > ${c.subCategory}`;
       if (!byCategory[key]) byCategory[key] = [];
       byCategory[key].push(c);
     });
+    console.log('[DRY-RUN] 이관 예정 목록:\n');
     Object.entries(byCategory).forEach(([key, pages]) => {
       console.log(`📁 ${key} (${pages.length}개)`);
       pages.forEach(p => {
-        const labelStr = (p.labels || []).join(', ');
+        const normalizedLabels = [...p.labels, 'rag:source', 'migrated:sd'].map(normalizeLabel).join(', ');
         console.log(`   - ${p.title}`);
-        console.log(`     레이블: ${labelStr}`);
-        console.log(`     원본: ${p.url}`);
+        console.log(`     레이블: ${normalizedLabels}`);
       });
       console.log('');
     });
     console.log('──────────────────────────────────────────');
     console.log(`DRY-RUN 완료. 총 ${toMigrate.length}개 페이지가 이관될 예정입니다.`);
-    console.log('실제 이관: --dry-run 옵션을 제거하고 실행하세요.');
     return;
   }
 
@@ -646,18 +703,20 @@ async function main() {
   const newLog = [...existingLog];
   let successCount = 0;
   let failCount = 0;
+  let totalAttachments = 0;
 
   for (let i = 0; i < toMigrate.length; i++) {
     const candidate = toMigrate[i];
     const progress = `[${i + 1}/${toMigrate.length}]`;
     console.log(`${progress} 이관 중: "${candidate.title}"`);
-    console.log(`         카테고리: ${candidate.category} > ${candidate.subCategory}`);
+    console.log(`         → ${candidate.category} > ${candidate.subCategory}`);
 
     const result = await migrateSinglePage(candidate, spaceId, sectionCache);
 
     if (result.success) {
       successCount++;
-      console.log(`         ✅ 완료 → ${result.newPageUrl}`);
+      totalAttachments += result.attachmentCount || 0;
+      console.log(`         ✅ 완료 (첨부파일 ${result.attachmentCount}개) → ${result.newPageUrl}`);
       newLog.push({
         sourcePageId: candidate.id,
         sourcePageTitle: candidate.title,
@@ -666,7 +725,8 @@ async function main() {
         newPageUrl: result.newPageUrl,
         category: candidate.category,
         subCategory: candidate.subCategory,
-        labels: candidate.labels,
+        labels: candidate.labels.map(normalizeLabel),
+        attachmentCount: result.attachmentCount,
         migratedAt: new Date().toISOString(),
       });
     } else {
@@ -684,126 +744,26 @@ async function main() {
       });
     }
 
-    // 로그 즉시 저장 (중간 실패 시에도 진행 상황 보존)
     saveMigrationLog(newLog);
-
-    // Rate Limit 방지 딜레이
-    if (i < toMigrate.length - 1) {
-      await sleep(API_DELAY_MS);
-    }
+    if (i < toMigrate.length - 1) await sleep(PAGE_DELAY_MS);
   }
 
-  // ── 최종 결과 요약 ──────────────────────────────────────────────────────────
   console.log('\n========================================');
   console.log('  이관 완료 요약');
   console.log('========================================');
   console.log(`  성공: ${successCount}개`);
   console.log(`  실패: ${failCount}개`);
   console.log(`  스킵 (기이관): ${skipped}개`);
+  console.log(`  복사된 첨부파일: ${totalAttachments}개`);
   console.log(`  이관 로그: ${MIGRATION_LOG_PATH}`);
   console.log(`  AA 스페이스: ${BASE_URL}/wiki/spaces/${AA_SPACE_KEY}/overview`);
 
   if (failCount > 0) {
     console.log('\n⚠️  일부 페이지 이관에 실패했습니다.');
-    console.log('   실패한 항목은 migration_log.json에서 확인하고 재시도하세요.');
-    console.log('   (이미 성공한 항목은 재실행 시 자동으로 스킵됩니다)');
+    console.log('   실패 항목은 migration_log.json에서 확인 후 재시도하세요.');
+    console.log('   (성공한 항목은 재실행 시 자동으로 스킵됩니다)');
   }
 }
-
-// ─── migration_candidates.md 파싱 (폴백) ─────────────────────────────────────
-
-/**
- * reference/migration_candidates.md를 파싱하여 이관 후보 배열을 반환합니다.
- * analyze_migration_candidates_lib.js 없이도 동작하는 폴백 방법입니다.
- * @returns {object[]}
- */
-function parseMigrationCandidatesMd() {
-  const mdPath = path.join(__dirname, '..', 'reference', 'migration_candidates.md');
-  if (!fs.existsSync(mdPath)) {
-    throw new Error('reference/migration_candidates.md 파일이 없습니다.');
-  }
-
-  // CRLF → LF 정규화
-  const content = fs.readFileSync(mdPath, 'utf8').replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-  const lines = content.split('\n');
-  const candidates = [];
-  let currentCategory = null;
-  let currentSubCategory = null;
-  let inTable = false;
-
-  for (const rawLine of lines) {
-    const line = rawLine.trim();
-    if (!line) continue;
-
-    // ## 카테고리 헤더 (예: ## MPS 이력 (73개))
-    const catMatch = line.match(/^## (.+?) \(\d+개\)/);
-    if (catMatch) {
-      currentCategory = catMatch[1].trim();
-      currentSubCategory = null;
-      inTable = false;
-      continue;
-    }
-
-    // ### 서브카테고리 헤더 (예: ### 2025년 월간·주간 (45개))
-    const subCatMatch = line.match(/^### (.+?) \(\d+개\)/);
-    if (subCatMatch) {
-      currentSubCategory = subCatMatch[1].trim();
-      inTable = false;
-      continue;
-    }
-
-    // 테이블 헤더/구분선 스킵
-    if (line.startsWith('| 제목') || line.startsWith('|---')) {
-      inTable = true;
-      continue;
-    }
-
-    // 다른 ## 또는 ### 섹션 시작 시 테이블 종료
-    if (line.startsWith('#')) {
-      inTable = false;
-      continue;
-    }
-
-    if (inTable && currentCategory && currentSubCategory && line.startsWith('|')) {
-      // 파이프로 구분된 컬럼 파싱
-      // 예: | [제목](url) | 2025-01-01 | 이관사유 | label1, label2 |
-      const cols = line.split('|').map(c => c.trim()).filter((c, i) => i > 0); // 첫 빈 항목 제거
-      if (cols.length < 4) continue;
-
-      // 제목과 URL 파싱: [제목](url)
-      const titleUrlMatch = cols[0].match(/^\[(.+?)\]\((.+?)\)$/);
-      if (!titleUrlMatch) continue;
-
-      const title = titleUrlMatch[1].trim();
-      const url = titleUrlMatch[2].trim();
-      const lastModified = cols[1].trim();
-      // cols[2] = reason, cols[3] = labels (마지막 빈 항목 제외)
-      const labelStr = cols[3] ? cols[3].replace(/\|$/, '').trim() : '';
-      const labels = labelStr.split(',').map(l => l.trim()).filter(Boolean);
-
-      // URL에서 페이지 ID 추출 (/pages/12345/ 패턴)
-      const idMatch = url.match(/\/pages\/(\d+)/);
-      const id = idMatch ? idMatch[1] : null;
-
-      if (id && title) {
-        candidates.push({
-          id,
-          title,
-          url,
-          lastModified,
-          labels,
-          category: currentCategory,
-          subCategory: currentSubCategory,
-        });
-      }
-    }
-  }
-
-  console.log(`  migration_candidates.md에서 ${candidates.length}개 후보 파싱 완료`);
-  return candidates;
-}
-
-// ─── 진입점 ───────────────────────────────────────────────────────────────────
 
 main().catch(err => {
   console.error('\n치명적 오류:', err.message);
