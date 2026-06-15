@@ -1,0 +1,4 @@
+.claude/*
+.env
+scripts/result_json/*
+node_modules/
