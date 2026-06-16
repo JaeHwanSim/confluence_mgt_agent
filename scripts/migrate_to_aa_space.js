@@ -285,7 +285,7 @@ async function fetchAttachments(pageId) {
       id: a.id,
       title: a.title,
       mediaType: a.metadata?.mediaType || 'application/octet-stream',
-      downloadUrl: `${BASE_URL}/wiki${a._links?.download || ''}`,
+      downloadUrl: `${BASE_URL}/wiki/rest/api/content/${pageId}/child/attachment/${a.id.replace('att', '')}/download`,
     }));
   } catch (_) {
     return [];
@@ -303,15 +303,22 @@ async function downloadAttachment(downloadUrl) {
       hostname: url.hostname,
       path: url.pathname + url.search,
       method: 'GET',
-      headers: { Authorization: AUTH_HEADER },
+      headers: {},
     };
+
+    // Atlassian 도메인에만 인증 헤더 추가 (AWS S3 등으로 리다이렉트 될 때 400 에러 방지)
+    if (url.hostname.includes('atlassian.net')) {
+      options.headers.Authorization = AUTH_HEADER;
+    }
 
     const req = https.request(options, (res) => {
       // 리다이렉트 처리
-      if (res.statusCode === 301 || res.statusCode === 302) {
+      if (res.statusCode >= 300 && res.statusCode < 400) {
         const location = res.headers.location;
         if (location) {
-          downloadAttachment(location).then(resolve).catch(() => resolve(null));
+          // 상대 경로 리다이렉트 처리
+          const redirectUrl = new URL(location, downloadUrl).href;
+          downloadAttachment(redirectUrl).then(resolve).catch(() => resolve(null));
           return;
         }
       }

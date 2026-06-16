@@ -67,10 +67,10 @@ const AA_SPACE_TREE = {
             body: buildSectionBody('2025년 월간·주간', '2025년도 과제별 월간/주간 MPS 문서'),
             labels: ['year-2025', 'group-center', 'status-completed'],
             children: [
-              { title: '연구소', body: buildSectionBody('연구소', '연구소 전체 월간/주간 MPS'), labels: ['group-center', 'year-2025'], children: [] },
-              { title: 'AI 과제', body: buildSectionBody('AI 과제', 'AI 과제 MPS 이력'), labels: ['group-ai', 'year-2025'], children: [] },
-              { title: 'SW 과제', body: buildSectionBody('SW 과제', 'SW 과제 MPS 이력'), labels: ['group-sw', 'year-2025'], children: [] },
-              { title: 'Device 과제', body: buildSectionBody('Device 과제', 'Device 과제 MPS 이력'), labels: ['group-device', 'year-2025'], children: [] },
+              { title: '25 연구소', body: buildSectionBody('25 연구소', '연구소 전체 월간/주간 MPS'), labels: ['group-center', 'year-2025'], children: [] },
+              { title: '25 AI 과제', body: buildSectionBody('25 AI 과제', 'AI 과제 MPS 이력'), labels: ['group-ai', 'year-2025'], children: [] },
+              { title: '25 SW 과제', body: buildSectionBody('25 SW 과제', 'SW 과제 MPS 이력'), labels: ['group-sw', 'year-2025'], children: [] },
+              { title: '25 Device 과제', body: buildSectionBody('25 Device 과제', 'Device 과제 MPS 이력'), labels: ['group-device', 'year-2025'], children: [] },
             ],
           },
           {
@@ -78,10 +78,10 @@ const AA_SPACE_TREE = {
             body: buildSectionBody('2026년 월간·주간', '2026년도 과제별 월간/주간 MPS 문서'),
             labels: ['year-2026', 'group-center', 'status-active'],
             children: [
-              { title: '연구소', body: buildSectionBody('연구소', '연구소 전체 월간/주간 MPS'), labels: ['group-center', 'year-2026'], children: [] },
-              { title: 'AI 과제', body: buildSectionBody('AI 과제', 'AI 과제 MPS 이력'), labels: ['group-ai', 'year-2026'], children: [] },
-              { title: 'SW 과제', body: buildSectionBody('SW 과제', 'SW 과제 MPS 이력'), labels: ['group-sw', 'year-2026'], children: [] },
-              { title: 'Device 과제', body: buildSectionBody('Device 과제', 'Device 과제 MPS 이력'), labels: ['group-device', 'year-2026'], children: [] },
+              { title: '26 연구소', body: buildSectionBody('26 연구소', '연구소 전체 월간/주간 MPS'), labels: ['group-center', 'year-2026'], children: [] },
+              { title: '26 AI 과제', body: buildSectionBody('26 AI 과제', 'AI 과제 MPS 이력'), labels: ['group-ai', 'year-2026'], children: [] },
+              { title: '26 SW 과제', body: buildSectionBody('26 SW 과제', 'SW 과제 MPS 이력'), labels: ['group-sw', 'year-2026'], children: [] },
+              { title: '26 Device 과제', body: buildSectionBody('26 Device 과제', 'Device 과제 MPS 이력'), labels: ['group-device', 'year-2026'], children: [] },
             ],
           },
         ],
@@ -308,13 +308,26 @@ async function createPage(spaceId, parentId, title, bodyHtml) {
 
 /**
  * 페이지 ID 조회 (멱등성 보장용)
+ * parentId가 주어지면 해당 부모의 자식 페이지 중에서 제목으로 검색합니다.
+ * parentId가 없으면 스페이스 전체에서 검색합니다 (스페이스 최상위 페이지에만 사용).
+ * @param {string} title
+ * @param {string|null} parentId
  */
-async function findPageIdByTitle(title) {
+async function findPageIdByTitle(title, parentId = null) {
   try {
-    const encoded = encodeURIComponent(title);
-    const data = await confluenceRequest('GET', `/pages?space-key=${AA_SPACE_KEY}&title=${encoded}&limit=5`);
-    const results = data.results || [];
-    return results.length > 0 ? results[0].id : null;
+    if (parentId) {
+      // 부모 페이지의 자식 페이지 중에서 검색 (v2 API: /pages/{id}/children)
+      const data = await confluenceRequest('GET', `/pages/${parentId}/children?limit=50`);
+      const results = data.results || [];
+      const found = results.find(p => p.title === title);
+      return found ? found.id : null;
+    } else {
+      // 스페이스 전체 검색 (최상위 노드에만 허용)
+      const encoded = encodeURIComponent(title);
+      const data = await confluenceRequest('GET', `/pages?space-key=${AA_SPACE_KEY}&title=${encoded}&limit=5`);
+      const results = data.results || [];
+      return results.length > 0 ? results[0].id : null;
+    }
   } catch (_) {
     return null;
   }
@@ -497,7 +510,8 @@ async function createPageTree(spaceId, parentId, nodes, indent = '') {
 
     try {
       console.log(`${indent}처리 중: "${node.title}"...`);
-      let pageId = await findPageIdByTitle(node.title);
+      // parentId를 기준으로 자식 페이지 중에서 검색 (동일 제목 중복 방지)
+      let pageId = await findPageIdByTitle(node.title, parentId);
 
       if (pageId) {
         if (UPDATE) {
