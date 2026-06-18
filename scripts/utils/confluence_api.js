@@ -52,27 +52,36 @@ async function confluenceRequest(method, endpoint, body = null) {
 
 /**
  * AA 스페이스의 최신 폴더 트리 구조(ID 및 Title)를 재귀적으로 가져와 텍스트 포맷으로 반환
+ * System Design 정책 (3-2)에 따라 'is-folder' 레이블이 부착된 페이지만 폴더(컨테이너)로 취급합니다.
  */
 async function fetchAASpaceTreeText() {
   try {
-    // AA 스페이스 내 모든 페이지 수집 (100개 제한 시 페이징 처리 필요할 수 있으나 현재는 단일 호출)
-    const spaces = await confluenceRequest('GET', '/wiki/api/v2/spaces?keys=AA');
-    if (!spaces.results || spaces.results.length === 0) return '';
-    const spaceId = spaces.results[0].id;
-
-    const pages = await confluenceRequest('GET', `/wiki/api/v2/spaces/${spaceId}/pages?limit=150`);
-    const pageList = pages.results || [];
+    // CQL을 사용하여 AA 스페이스 내 'is-folder' 레이블을 가진 페이지만 검색
+    const query = encodeURIComponent(`space="AA" and label="is-folder"`);
+    const searchUrl = `/wiki/rest/api/content/search?cql=${query}&limit=200&expand=ancestors`;
+    const res = await confluenceRequest('GET', searchUrl);
     
-    // 부모-자식 트리 구성
+    const pageList = res.results || [];
+    if (pageList.length === 0) {
+      console.warn('⚠️ AA 스페이스에 is-folder 레이블을 가진 페이지가 없습니다. 전체 페이지를 가져옵니다.');
+      // Fallback: 레이블 세팅이 아직 안 되어있다면 임시로 V2 API로 전체 조회 (초기 구축용)
+      return await fetchAASpaceTreeTextFallback();
+    }
+    
     const childrenMap = {};
     const rootNodes = [];
     
     pageList.forEach(p => {
-      if (!p.parentId) {
+      // ancestors 배열의 마지막 요소가 부모 페이지
+      const parentId = (p.ancestors && p.ancestors.length > 0) 
+        ? p.ancestors[p.ancestors.length - 1].id 
+        : null;
+        
+      if (!parentId) {
         rootNodes.push(p);
       } else {
-        if (!childrenMap[p.parentId]) childrenMap[p.parentId] = [];
-        childrenMap[p.parentId].push(p);
+        if (!childrenMap[parentId]) childrenMap[parentId] = [];
+        childrenMap[parentId].push(p);
       }
     });
 
@@ -89,6 +98,42 @@ async function fetchAASpaceTreeText() {
 
   } catch (error) {
     console.error('Failed to fetch AA Space Tree:', error.message);
+    return '';
+  }
+}
+
+// 초기 세팅 전 is-folder 태그가 하나도 없을 때를 대비한 Fallback (기존 로직)
+async function fetchAASpaceTreeTextFallback() {
+  try {
+    const spaces = await confluenceRequest('GET', '/wiki/api/v2/spaces?keys=AA');
+    if (!spaces.results || spaces.results.length === 0) return '';
+    const spaceId = spaces.results[0].id;
+
+    const pages = await confluenceRequest('GET', `/wiki/api/v2/spaces/${spaceId}/pages?limit=200`);
+    const pageList = pages.results || [];
+    
+    const childrenMap = {};
+    const rootNodes = [];
+    
+    pageList.forEach(p => {
+      if (!p.parentId) rootNodes.push(p);
+      else {
+        if (!childrenMap[p.parentId]) childrenMap[p.parentId] = [];
+        childrenMap[p.parentId].push(p);
+      }
+    });
+
+    let treeText = '--- AA Space Folder IDs (Fallback: All Pages) ---\n';
+    function printTree(node, depth = 0) {
+      const indent = '  '.repeat(depth);
+      treeText += `${indent}- ${node.title} (ID: ${node.id})\n`;
+      const children = childrenMap[node.id] || [];
+      children.forEach(c => printTree(c, depth + 1));
+    }
+
+    rootNodes.forEach(root => printTree(root));
+    return treeText;
+  } catch (error) {
     return '';
   }
 }

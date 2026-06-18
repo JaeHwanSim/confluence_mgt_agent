@@ -1,44 +1,50 @@
 # 🚀 프로젝트 진행 상황 핸드오프 (Handoff)
 
-> 작성일: 2026-06-17  
-> **다른 PC에서 작업을 이어서 하기 위한 상태 및 할 일 요약 문서입니다.**
+> 작성일: 2026-06-18
+> **현재까지의 전체 진행 상태 및 향후 계획 요약 문서입니다.**
 
 ---
 
 ## 1. 지금까지 완료된 작업 (Done)
 
-### 1-1. 1차 마이그레이션 이슈 해결 (AA 스페이스 초기 세팅 완료)
-- SD 스페이스 -> AA 스페이스 이관 과정에서 발생한 첨부파일 다운로드 이슈 해결 완료.
-- AWS S3 리다이렉트 400 오류 및 구버전 API 401 권한 에러를 **최신 REST API 엔드포인트 적용**으로 우회 성공.
-- 이미지 파일은 정상 복사 및 업로드 처리, 동영상 파일은 원본 링크 배너 표기로 대체 합의.
+### 1-1. AA 스페이스 초기 구조 세팅 (Phase 1~2)
+- 하드코딩된 `AA_SPACE_TREE`를 기반으로 폴더용 빈 페이지들을 자동 생성(`setup_aa_space.js`) 완료.
+- 동적 컨텍스트 주입: 실행 시점에 실시간으로 AA 스페이스의 폴더 트리를 읽어와 Dify에 주입하는 `fetchAASpaceTreeText()` 로직 완성.
+- Dify 프롬프트 원본을 레포지토리 내 `dify/system_prompt.md` 파일로 저장하여 버전 관리 체계 구축 완료.
+- Dify API 연동 및 JSON 파싱 테스트 (`test_dify.js`) 완벽 성공.
 
-### 1-2. 자동화 아키텍처 설계 확정 (GitHub Actions + Dify)
-- **하이브리드 아키텍처**: GitHub Actions가 스케줄러 및 실행(API 통신)을 담당하고, Dify가 LLM 판단(두뇌)을 담당하는 구조로 확정.
-- **동적 컨텍스트 주입 (Dynamic Context Injection)**: AA 스페이스에 폴더가 새로 생기더라도 하드코딩 갱신 없이, 스크립트 실행 시점에 실시간으로 Confluence 폴더 트리를 읽어와 Dify 프롬프트에 주입하는 획기적인 방식 채택.
-- **AA Space Auditor (자가 정화기) 추가**: 단순 타 스페이스 이관뿐만 아니라, AA 스페이스 내부의 잘못된 폴더/태그를 자동 교정하는 기능 설계 추가.
+### 1-2. 메인 수집기(Migrator) 파이프라인 개발 및 검증 (Phase 3)
+- `scripts/migrator.js` 스크립트 작성 완료.
+  1. SD 스페이스에서 최근 수정된 문서 탐색 (CQL)
+  2. Dify를 통해 문서 유효성(노이즈 필터링), 목적지 폴더, 태그 판별
+  3. 유효한 문서를 AA 스페이스로 자동 복사 (`migration_utils.js` 연동)
+  4. 이미지 자동 다운로드/업로드 및 본문 링크 치환 완벽 적용
+  5. 원본 위치와 메타데이터가 담긴 **이관 정보 배너** 자동 삽입 적용
+- **실제 이관(복사) E2E 테스트 성공**: SD 문서 10개를 대상으로 테스트를 진행하여 성공적으로 4개의 문서를 복사하고 노이즈 및 중복 문서를 완벽하게 걸러냄.
 
-### 1-3. 기반 유틸리티 코드 작성
-- `scripts/utils/confluence_api.js`: Confluence 공통 통신 모듈 및 `fetchAASpaceTreeText()` (동적 컨텍스트 수집) 함수 개발 완료.
-- `scripts/utils/dify_api.js`: Dify 워크플로우 API 통신 및 JSON 파싱 인터페이스 초안 개발 완료.
-
-### 1-4. Dify 워크플로우 구성 및 API 검증 완료 (완료)
-- `.env`에 사내 Dify API 설정 및 SSL 인증서 우회 로직 적용.
-- `scripts/test_dify.js`를 통해 **동적 컨텍스트 수집 -> Dify 전송 -> 정확한 폴더 및 태그 JSON 응답 수신** E2E 테스트 성공.
-- Dify 프롬프트 원본을 레포지토리 내 `dify/system_prompt.md` 파일로 저장하여 버전 관리 체계 구축.
-
----
-
-## 2. 현재 남은 할 일 (To-Do)
-
-### Step 3: 메인 실행 스크립트 작성 (Phase 3)
-- [ ] `scripts/migrator.js` : 타 스페이스에서 수정된 글 수집 -> Dify 판단 -> 복사 로직 작성
-- [ ] `scripts/auditor.js` : AA 스페이스 전수 검사 -> Dify 판단 -> 위치/라벨 수정 로직 작성
-- [ ] `scripts/batch_utility.js` : 단순 1:1 라벨 교체용 수동 배치 툴 작성
-
-### Step 4: GitHub Actions 연동 및 알림 (Phase 4)
-- [ ] `.github/workflows/confluence_automation.yml` 파일 작성 (Cron 스케줄 및 Workflow Dispatch 트리거 설정)
-- [ ] Slack/Email Webhook을 연동하여 작업 결과 및 `needs_new_category` 발생 시 예외 알림 기능 구현
+### 1-3. 레이블 정책 정립 및 초기화
+- "내용이 없는 폴더 페이지에는 `is-folder` 외의 다른 내용 분류 태그를 달지 않는다"는 베스트 프랙티스 합의.
+- 현재 관리자님의 수동 레이블 정리를 돕기 위해, 기존 AA 스페이스 전체 문서에 임시로 붙여두었던 `is-folder` 태그를 스크립트를 통해 일괄 삭제하여 **백지상태(Clean Slate)**로 초기화 완료.
 
 ---
 
-> **다음 진행 단계**: `migrator.js` 스크립트 작성 시작.
+## 2. 현재 대기 중인 상태 (Pending)
+
+- **관리자님의 수동 폴더/레이블 기준 정리**: 관리자님께서 직접 폴더 구조와 레이블을 검토하시고, 기준이 확정되면 이에 맞춰 봇의 최종 레이블링 규칙을 업데이트할 예정.
+
+---
+
+## 3. 이어서 할 일 (To-Do)
+
+### Step 4: 규칙 업데이트 및 Auditor(자가 치유 봇) 개발 (Phase 4)
+- [ ] 관리자님의 수동 정리가 끝나면, 확정된 폴더 및 레이블 구조에 맞게 `AA_SPACE_TREE` 및 스크립트 기준(또는 Dify System Prompt) 미세 조정.
+- [ ] `scripts/auditor.js` 개발: AA 스페이스 전수 검사를 통해 규칙에 어긋난 문서(태그 누락, 잘못된 폴더 위치 등)를 Dify가 판단하여 자동으로 올바른 위치로 옮기거나 태그를 수정하는 '자가 정화' 기능.
+- [ ] `scripts/batch_utility.js`: 단순 1:1 라벨 교체용 수동 배치 툴 작성.
+
+### Step 5: GitHub Actions 연동 및 스케줄링 자동화 (최종)
+- [ ] `.github/workflows/confluence_automation.yml` 파일 작성 (매일 밤 자정 Migrator/Auditor가 돌도록 Cron 설정).
+- [ ] Slack/Email Webhook을 연동하여 작업 결과 및 수동 확인 필요 문서(`needs_new_category` 발생 시) 알림 전송.
+
+---
+
+> **다음 진행 대기**: 관리자님의 레이블/폴더 수동 정리 완료 사인 대기.

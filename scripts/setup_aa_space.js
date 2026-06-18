@@ -342,8 +342,9 @@ async function addLabels(pageId, labels) {
   if (!labels || labels.length === 0) return;
   const payload = labels.map(name => ({ prefix: 'global', name }));
   
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const url = new URL(`${BASE_URL}/wiki/rest/api/content/${pageId}/label`);
+    const body = JSON.stringify(payload);
     const options = {
       hostname: url.hostname,
       path: url.pathname + url.search,
@@ -351,6 +352,7 @@ async function addLabels(pageId, labels) {
       headers: {
         'Authorization': AUTH_HEADER,
         'Content-Type': 'application/json',
+        'Content-Length': Buffer.byteLength(body),
       },
     };
 
@@ -358,12 +360,18 @@ async function addLabels(pageId, labels) {
       let data = '';
       res.on('data', chunk => data += chunk);
       res.on('end', () => {
-        resolve(); // 에러 나도 무시
+        if (res.statusCode >= 300) {
+          console.error(`      ⚠️ 레이블 추가 실패 (${res.statusCode}): ${data}`);
+        }
+        resolve();
       });
     });
 
-    req.on('error', reject);
-    req.write(JSON.stringify(payload));
+    req.on('error', (err) => {
+      console.error(`      ⚠️ 레이블 요청 에러: ${err.message}`);
+      resolve();
+    });
+    req.write(body);
     req.end();
   });
 }
@@ -493,6 +501,9 @@ async function updatePageBody(pageId, title, bodyHtml) {
  */
 async function createPageTree(spaceId, parentId, nodes, indent = '') {
   for (const node of nodes) {
+    if (!node.labels) node.labels = [];
+    if (!node.labels.includes('is-folder')) node.labels.push('is-folder');
+
     if (DRY_RUN) {
       if (UPDATE) {
         console.log(`${indent}[DRY-RUN] 업데이트 예정: "${node.title}"`);
