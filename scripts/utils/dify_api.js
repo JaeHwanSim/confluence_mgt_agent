@@ -39,10 +39,17 @@ async function getPageClassificationFromDify(pageTitle, pageBody, contextTree) {
       user: 'confluence-bot'
     });
 
+    // 사용자가 .env에 /workflows/run 을 누락한 경우 자동 추가
+    let requestPath = url.pathname;
+    if (!requestPath.endsWith('/workflows/run')) {
+      requestPath = requestPath.replace(/\/$/, '') + '/workflows/run';
+    }
+
     const options = {
       hostname: url.hostname,
-      path: url.pathname,
+      path: requestPath,
       method: 'POST',
+      rejectUnauthorized: false, // 사내망 Self-signed 인증서 에러 무시
       headers: {
         'Authorization': `Bearer ${DIFY_API_KEY}`,
         'Content-Type': 'application/json',
@@ -57,8 +64,21 @@ async function getPageClassificationFromDify(pageTitle, pageBody, contextTree) {
         if (res.statusCode >= 200 && res.statusCode < 300) {
           try {
             const parsed = JSON.parse(data);
-            // Dify 워크플로우의 반환값이 data.outputs.result 에 JSON string으로 온다고 가정
-            const resultJson = JSON.parse(parsed.data.outputs.result);
+            let resultText = parsed.data.outputs.result;
+            
+            // DeepSeek 등 추론형 모델의 <think> 태그 제거
+            resultText = resultText.replace(/<think>[\s\S]*?<\/think>\s*/gi, '');
+            // 마크다운 코드 블록 제거 (```json ... ```)
+            const jsonMatch = resultText.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+            if (jsonMatch) {
+              resultText = jsonMatch[1];
+            } else {
+              // 괄호 부분만 강제 추출 시도
+              const bracketMatch = resultText.match(/\{[\s\S]*\}/);
+              if (bracketMatch) resultText = bracketMatch[0];
+            }
+
+            const resultJson = JSON.parse(resultText);
             resolve(resultJson);
           } catch (e) {
             reject(new Error(`Failed to parse Dify response: ${e.message}\nRaw: ${data}`));
