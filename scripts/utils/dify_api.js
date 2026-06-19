@@ -11,9 +11,10 @@ const DIFY_API_KEY = process.env.DIFY_API_KEY;
  * @param {string} pageTitle 페이지 제목
  * @param {string} pageBody 페이지 본문 (텍스트 또는 마크다운)
  * @param {string} contextTree 실시간 AA 스페이스 트리 구조 (텍스트)
+ * @param {string} sourceSpaceKey 원본 스페이스 키 (예: SD, HW) - Dify 내부 룰 매핑용
  * @returns {Promise<Object>} { is_valid, target_folder_id, labels, needs_new_category, suggested_new_folder, reason }
  */
-async function getPageClassificationFromDify(pageTitle, pageBody, contextTree) {
+async function getPageClassificationFromDify(pageTitle, pageBody, contextTree, sourceSpaceKey = 'SD') {
   if (!DIFY_API_URL || !DIFY_API_KEY) {
     console.warn('⚠️ DIFY_API_URL or DIFY_API_KEY is not set. Using mock response.');
     // Mock response for testing without Dify
@@ -33,7 +34,8 @@ async function getPageClassificationFromDify(pageTitle, pageBody, contextTree) {
       inputs: {
         page_title: pageTitle,
         page_body: pageBody.substring(0, 10000), // 너무 길면 자르기
-        context_tree: contextTree
+        context_tree: contextTree,
+        source_space_key: sourceSpaceKey
       },
       response_mode: 'blocking',
       user: 'confluence-bot'

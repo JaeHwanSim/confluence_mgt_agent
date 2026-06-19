@@ -91,6 +91,83 @@ async function addLabels(pageId, labels) {
   });
 }
 
+// ─── 레이블 및 페이지 이동 로직 추가 ──────────────────────────────────
+async function getLabels(pageId) {
+  return new Promise((resolve) => {
+    const url = new URL(`${BASE_URL}/wiki/rest/api/content/${pageId}/label`);
+    const options = {
+      hostname: url.hostname,
+      path: url.pathname + url.search,
+      method: 'GET',
+      headers: { Authorization: AUTH_HEADER, Accept: 'application/json' },
+    };
+    const req = https.request(options, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => {
+        try {
+          const parsed = JSON.parse(data);
+          resolve((parsed.results || []).map(l => l.name));
+        } catch (_) { resolve([]); }
+      });
+    });
+    req.on('error', () => resolve([]));
+    req.end();
+  });
+}
+
+async function deleteLabel(pageId, labelName) {
+  return new Promise((resolve) => {
+    const url = new URL(`${BASE_URL}/wiki/rest/api/content/${pageId}/label/${encodeURIComponent(labelName)}`);
+    const options = {
+      hostname: url.hostname,
+      path: url.pathname + url.search,
+      method: 'DELETE',
+      headers: { Authorization: AUTH_HEADER },
+    };
+    const req = https.request(options, (res) => {
+      res.on('data', () => {});
+      res.on('end', () => resolve());
+    });
+    req.on('error', () => resolve());
+    req.end();
+  });
+}
+
+async function syncLabels(pageId, desiredLabels) {
+  const currentLabels = await getLabels(pageId);
+  const desired = new Set(desiredLabels);
+  const current = new Set(currentLabels);
+
+  const toAdd = desiredLabels.filter(l => !current.has(l));
+  const toRemove = currentLabels.filter(l => !desired.has(l));
+
+  for (const label of toRemove) {
+    // is-folder 는 감사/동기화 시 건드리지 않는 것이 원칙 (일반 문서는 애초에 is-folder가 없으므로 제거 대상에 포함됨)
+    // 하지만 폴더인 경우 is-folder를 빼면 안되니 예외처리 (Auditor는 일반문서만 돌리므로 무관하지만 안전을 위해)
+    if (label === 'is-folder') continue; 
+    await deleteLabel(pageId, label);
+    await sleep(200);
+  }
+  if (toAdd.length > 0) {
+    await addLabels(pageId, toAdd);
+  }
+  return { added: toAdd, removed: toRemove };
+}
+
+async function movePage(pageId, newParentId) {
+  const currentPage = await confluenceRequest('GET', `/wiki/api/v2/pages/${pageId}`);
+  const currentVersion = currentPage.version?.number || 1;
+
+  await confluenceRequest('PUT', `/wiki/api/v2/pages/${pageId}`, {
+    id: pageId,
+    status: 'current',
+    title: currentPage.title,
+    parentId: newParentId,
+    version: { number: currentVersion + 1 }
+  });
+}
+
 // ─── 3. 첨부파일 복사 관련 ──────────────────────────────────────────────────
 async function fetchAttachments(pageId) {
   try {
@@ -239,6 +316,10 @@ module.exports = {
   fetchPageDetail,
   createPage,
   updatePageBody,
+  getLabels,
+  deleteLabel,
+  syncLabels,
+  movePage,
   addLabels,
   copyAttachments,
   buildBanner,

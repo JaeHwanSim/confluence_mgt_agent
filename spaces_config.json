@@ -1,0 +1,14 @@
+{
+  "SD": {
+    "active": true,
+    "description": "소프트웨어 개발 스페이스"
+  },
+  "HW": {
+    "active": false,
+    "description": "하드웨어 개발 스페이스"
+  },
+  "QA": {
+    "active": false,
+    "description": "품질 보증 및 테스트 스페이스"
+  }
+}

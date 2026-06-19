@@ -1,0 +1,51 @@
+name: Confluence Batch Utility
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: '실행할 명령어 (rename 또는 delete)'
+        required: true
+        type: choice
+        options:
+          - rename
+          - delete
+      target_label:
+        description: '대상 레이블 이름 (예: team:ai)'
+        required: true
+        type: string
+      new_label:
+        description: '[Rename 전용] 새 레이블 이름 (예: group-ai). Delete일 경우 비워두세요.'
+        required: false
+        type: string
+
+jobs:
+  run-batch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Batch Utility
+        env:
+          CONFLUENCE_EMAIL: ${{ secrets.CONFLUENCE_EMAIL }}
+          CONFLUENCE_TOKEN: ${{ secrets.CONFLUENCE_TOKEN }}
+        run: |
+          if [ "${{ inputs.command }}" == "rename" ]; then
+            if [ -z "${{ inputs.new_label }}" ]; then
+              echo "Error: new_label is required for rename command."
+              exit 1
+            fi
+            node scripts/batch_utility.js rename "${{ inputs.target_label }}" "${{ inputs.new_label }}"
+          else
+            node scripts/batch_utility.js delete "${{ inputs.target_label }}"
+          fi

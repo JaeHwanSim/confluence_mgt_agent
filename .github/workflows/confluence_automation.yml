@@ -1,0 +1,47 @@
+name: Confluence AA Space Automation
+
+on:
+  schedule:
+    # 매일 자정(KST 기준 오전 9시)에 실행
+    - cron: '0 15 * * *'
+  workflow_dispatch:
+    # 수동 실행 버튼 활성화
+
+jobs:
+  run-automation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Run Migrator (수집기)
+        env:
+          CONFLUENCE_EMAIL: ${{ secrets.CONFLUENCE_EMAIL }}
+          CONFLUENCE_TOKEN: ${{ secrets.CONFLUENCE_TOKEN }}
+          DIFY_API_KEY: ${{ secrets.DIFY_API_KEY }}
+        run: node scripts/migrator.js
+
+      - name: Run Auditor (자가 정화 봇)
+        env:
+          CONFLUENCE_EMAIL: ${{ secrets.CONFLUENCE_EMAIL }}
+          CONFLUENCE_TOKEN: ${{ secrets.CONFLUENCE_TOKEN }}
+          DIFY_API_KEY: ${{ secrets.DIFY_API_KEY }}
+        run: node scripts/auditor.js
+
+      - name: Notify Slack on Failure
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,action,eventName,ref,workflow
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
