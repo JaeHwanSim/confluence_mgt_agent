@@ -87,11 +87,11 @@ async function fetchAASpaceTreeText() {
     });
 
     let treeText = '--- AA Space Folder IDs ---\n';
-    function printTree(node, depth = 0) {
-      const indent = '  '.repeat(depth);
-      treeText += `${indent}- ${node.title} (ID: ${node.id})\n`;
+    function printTree(node, currentPath = '') {
+      const newPath = currentPath ? `${currentPath} > ${node.title}` : node.title;
+      treeText += `- ${newPath} (ID: ${node.id})\n`;
       const children = childrenMap[node.id] || [];
-      children.forEach(c => printTree(c, depth + 1));
+      children.forEach(c => printTree(c, newPath));
     }
 
     rootNodes.forEach(root => printTree(root));
@@ -125,11 +125,11 @@ async function fetchAASpaceTreeTextFallback() {
     });
 
     let treeText = '--- AA Space Folder IDs (Fallback: All Pages) ---\n';
-    function printTree(node, depth = 0) {
-      const indent = '  '.repeat(depth);
-      treeText += `${indent}- ${node.title} (ID: ${node.id})\n`;
+    function printTree(node, currentPath = '') {
+      const newPath = currentPath ? `${currentPath} > ${node.title}` : node.title;
+      treeText += `- ${newPath} (ID: ${node.id})\n`;
       const children = childrenMap[node.id] || [];
-      children.forEach(c => printTree(c, depth + 1));
+      children.forEach(c => printTree(c, newPath));
     }
 
     rootNodes.forEach(root => printTree(root));
