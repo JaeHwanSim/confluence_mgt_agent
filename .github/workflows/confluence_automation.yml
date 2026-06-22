@@ -45,3 +45,18 @@ jobs:
           fields: repo,message,commit,author,action,eventName,ref,workflow
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      # 이메일 알림 연동 (실패 시 관리자에게 이메일 발송)
+      # 사용하려면 GitHub Secrets에 EMAIL_USERNAME, EMAIL_PASSWORD 등을 등록해야 합니다.
+      - name: Notify via Email on Failure
+        if: failure()
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.EMAIL_USERNAME }}
+          password: ${{ secrets.EMAIL_PASSWORD }}
+          subject: 🚨 [Confluence 봇] 자동화 작업 실패 알림
+          to: ${{ secrets.NOTIFY_EMAIL_TO }}
+          from: Confluence Automation Bot
+          body: 자정 문서 정화(Auditor) 작업 중 오류가 발생했습니다. GitHub Actions 로그를 확인해 주세요.

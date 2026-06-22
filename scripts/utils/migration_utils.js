@@ -293,6 +293,9 @@ function buildBanner(meta, skippedVideos = []) {
     <p><strong>📌 [자동 이관 문서]</strong></p>
     <table>
       <tbody>
+        <tr><td><strong>적용된 룰 버전</strong></td><td>${escapeHtml(meta.ruleVersion || '1.0')}</td></tr>
+        <tr><td><strong>마지막 감사 버전(Page)</strong></td><td>${escapeHtml(meta.pageVersion || '1')}</td></tr>
+        <tr><td><strong>원본 스페이스</strong></td><td>${escapeHtml(meta.sourceSpaceKey || '알 수 없음')}</td></tr>
         <tr><td><strong>원본 위치</strong></td><td><a href="${meta.sourcePageUrl}">${escapeHtml(meta.sourcePageTitle)}</a></td></tr>
         <tr><td><strong>원작성자</strong></td><td>${escapeHtml(meta.authorDisplayName)}</td></tr>
         <tr><td><strong>원본 작성일</strong></td><td>${originalDate}</td></tr>

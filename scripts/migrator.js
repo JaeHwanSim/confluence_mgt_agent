@@ -70,7 +70,11 @@ async function runMigrator() {
       const truncatedBody = pageBody.substring(0, 20000);
 
       try {
-        const decision = await getPageClassificationFromDify(page.title, truncatedBody, contextTree, sourceSpace);
+        console.log(`✨ [진행 중] 원본 페이지 메타데이터 및 날짜 조회 중...`);
+        const srcMeta = await fetchPageDetail(page.id);
+        const pageDate = srcMeta.createdAt || ''; // 예: '2026-06-15'
+
+        const decision = await getPageClassificationFromDify(page.title, truncatedBody, contextTree, sourceSpace, pageDate);
         console.log(`🤖 Dify 판단: 유효성(${decision.is_valid}) | 목적지(${decision.target_folder_id})`);
 
         if (decision.needs_new_category) {
@@ -82,9 +86,6 @@ async function runMigrator() {
           console.log(`⏭️ [스킵] 유효하지 않거나 타겟 폴더가 없습니다.`);
           continue;
         }
-
-        console.log(`✨ [복사 진행] 원본 페이지 세부 정보 조회 중...`);
-        const srcMeta = await fetchPageDetail(page.id);
         
         console.log(`✨ [복사 진행] 새 페이지 껍데기 생성 중...`);
         const newPage = await createPage(AA_SPACE_KEY, decision.target_folder_id, srcMeta.title, '<p>복사 중...</p>');
@@ -92,12 +93,18 @@ async function runMigrator() {
         console.log(`✨ [복사 진행] 첨부파일 복사 중...`);
         const { skippedVideos } = await copyAttachments(page.id, newPage.id);
 
+        const config = require('../spaces_config.json');
+        const globalRuleVersion = config.GLOBAL_RULE_VERSION || '1.0';
+
         console.log(`✨ [복사 진행] 본문 변환 및 배너 삽입 중...`);
         const bannerHtml = buildBanner({
+          ruleVersion: globalRuleVersion,
+          pageVersion: '1',
+          sourceSpaceKey: sourceSpace,
           sourcePageUrl: srcMeta.url,
           sourcePageTitle: srcMeta.title,
           authorDisplayName: srcMeta.authorDisplayName,
-          originalCreatedAt: srcMeta.createdAt,
+          originalCreatedAt: pageDate,
           labels: decision.labels
         }, skippedVideos);
 

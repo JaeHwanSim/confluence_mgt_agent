@@ -12,16 +12,17 @@ const DIFY_API_KEY = process.env.DIFY_API_KEY;
  * @param {string} pageBody 페이지 본문 (텍스트 또는 마크다운)
  * @param {string} contextTree 실시간 AA 스페이스 트리 구조 (텍스트)
  * @param {string} sourceSpaceKey 원본 스페이스 키 (예: SD, HW) - Dify 내부 룰 매핑용
+ * @param {string} pageDate 원본 문서의 작성일 또는 수정일 (예: '2026-06-15')
  * @returns {Promise<Object>} { is_valid, target_folder_id, labels, needs_new_category, suggested_new_folder, reason }
  */
-async function getPageClassificationFromDify(pageTitle, pageBody, contextTree, sourceSpaceKey = 'SD') {
+async function getPageClassificationFromDify(pageTitle, pageBody, contextTree, sourceSpaceKey = 'SD', pageDate = '') {
   if (!DIFY_API_URL || !DIFY_API_KEY) {
     console.warn('⚠️ DIFY_API_URL or DIFY_API_KEY is not set. Using mock response.');
     // Mock response for testing without Dify
     return {
       is_valid: true,
       target_folder_id: "433356856", // Mock: 연간 MPS 폴더
-      labels: ["group-center", "doctype-mps-annual", "year-2026"],
+      labels: ["group-center", "doctype-mps-annual", "month-2026-06"],
       needs_new_category: false
     };
   }
@@ -35,7 +36,8 @@ async function getPageClassificationFromDify(pageTitle, pageBody, contextTree, s
         page_title: pageTitle,
         page_body: pageBody.substring(0, 10000), // 너무 길면 자르기
         context_tree: contextTree,
-        source_space_key: sourceSpaceKey
+        source_space_key: sourceSpaceKey,
+        page_date: pageDate
       },
       response_mode: 'blocking',
       user: 'confluence-bot'

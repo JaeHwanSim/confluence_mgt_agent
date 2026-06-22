@@ -43,8 +43,40 @@ async function runAuditor() {
     const pageBody = page.body?.storage?.value || '';
     const truncatedBody = pageBody.substring(0, 20000);
 
+    // 본문 상단 배너에서 원본 스페이스 역추출 (배너가 없을 경우 기본값 SD)
+    let inferredSourceSpace = 'SD';
+    const spaceMatch = truncatedBody.match(/원본 스페이스<\/strong><\/td><td>([^<]+)/);
+    if (spaceMatch) {
+      inferredSourceSpace = spaceMatch[1].trim();
+    }
+
+    // 본문 상단 배너에서 원본 작성일 역추출
+    let pageDate = '';
+    const dateMatch = truncatedBody.match(/원본 작성일:\s*([\d-]+)/);
+    if (dateMatch) {
+      pageDate = dateMatch[1];
+    }
+
+    // 0원 필터링: 룰 버전 및 문서 버전 교차 검증
+    const config = require('../spaces_config.json');
+    const systemRuleVersion = config.GLOBAL_RULE_VERSION || '1.0';
+    const currentPageVersion = String(page.version?.number || '1');
+
+    let bannerRuleVersion = '';
+    const rvMatch = truncatedBody.match(/적용된 룰 버전<\/strong><\/td><td>([^<]+)/);
+    if (rvMatch) bannerRuleVersion = rvMatch[1].trim();
+
+    let bannerPageVersion = '';
+    const pvMatch = truncatedBody.match(/마지막 감사 버전\(Page\)<\/strong><\/td><td>([^<]+)/);
+    if (pvMatch) bannerPageVersion = pvMatch[1].trim();
+
+    if (bannerRuleVersion === systemRuleVersion && bannerPageVersion === currentPageVersion) {
+      console.log(`   ⏭️ [스킵] 문서(v${currentPageVersion})와 룰(v${systemRuleVersion})이 모두 최신 상태입니다. (LLM 비용 0)`);
+      continue;
+    }
+
     try {
-      const decision = await getPageClassificationFromDify(page.title, truncatedBody, contextTree);
+      const decision = await getPageClassificationFromDify(page.title, truncatedBody, contextTree, inferredSourceSpace, pageDate);
       
       if (decision.needs_new_category) {
         console.log(`🚨 [알림] 새로운 폴더가 필요한 문서입니다. (제안: ${decision.suggested_new_folder})`);
@@ -74,12 +106,33 @@ async function runAuditor() {
       }
 
       // 2. 레이블 검증 및 교정
+      const { syncLabels } = require('./utils/migration_utils');
       const { added, removed } = await syncLabels(page.id, decision.labels);
       if (added.length > 0 || removed.length > 0) {
         console.log(`   🏷️ [태그 교정] 추가: [${added.join(', ')}], 제거: [${removed.join(', ')}]`);
         healed = true;
       } else {
         console.log(`   ✅ [태그 정상] 레이블이 완벽하게 일치합니다.`);
+      }
+
+      // 3. 배너 버전 갱신 (0원 필터링용)
+      if (healed || bannerRuleVersion !== systemRuleVersion || bannerPageVersion !== currentPageVersion) {
+        // updatePageBody를 호출하면 Confluence의 페이지 버전이 1 증가하므로 이를 미리 예측하여 각인합니다.
+        const targetPageVersion = String(parseInt(currentPageVersion) + 1);
+        let newBody = pageBody;
+        
+        if (newBody.includes('적용된 룰 버전')) {
+          newBody = newBody.replace(/<td><strong>적용된 룰 버전<\/strong><\/td><td>([^<]+)<\/td>/, `<td><strong>적용된 룰 버전</strong></td><td>${systemRuleVersion}</td>`);
+          newBody = newBody.replace(/<td><strong>마지막 감사 버전\(Page\)<\/strong><\/td><td>([^<]+)<\/td>/, `<td><strong>마지막 감사 버전(Page)</strong></td><td>${targetPageVersion}</td>`);
+        } else {
+          // 기존 배너에 항목이 없다면 강제 삽입 (호환성)
+          newBody = newBody.replace(/<tr><td><strong>원본 스페이스<\/strong>/, `<tr><td><strong>적용된 룰 버전</strong></td><td>${systemRuleVersion}</td></tr><tr><td><strong>마지막 감사 버전(Page)</strong></td><td>${targetPageVersion}</td></tr><tr><td><strong>원본 스페이스</strong>`);
+        }
+
+        console.log(`   📝 [배너 갱신] 적용된 룰 버전: v${systemRuleVersion}, 마지막 감사 버전: v${targetPageVersion}`);
+        const { updatePageBody } = require('./utils/migration_utils');
+        await updatePageBody(page.id, page.title, newBody);
+        healed = true;
       }
 
       if (healed) {

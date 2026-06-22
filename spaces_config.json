@@ -1,14 +1,19 @@
 {
+  "GLOBAL_RULE_VERSION": "1.0",
   "SD": {
     "active": true,
-    "description": "소프트웨어 개발 스페이스"
+    "description": "덴탈 AI 연구소의 기본 업무 문서 관리 스페이스."
   },
-  "HW": {
-    "active": false,
-    "description": "하드웨어 개발 스페이스"
+  "WND": {
+    "active": true,
+    "description": "Dynamic Navigation 프로젝트의 문서 관리 스페이스. 과제 관련 문서 산출물이나 진행 상황 등을 정리하는 용도"
   },
-  "QA": {
-    "active": false,
-    "description": "품질 보증 및 테스트 스페이스"
+  "Device": {
+    "active": true,
+    "description": "덴탈 AI 연구소의 개발PM팀의 문서 관리 스페이스. 덴탈 디바이스의 HW 관련 업무 전반을 정리하는 용도"
+  },
+  "SmileArch": {
+    "active": true,
+    "description": "당사 Neobiotech의 덴탈 SW 인 SmileArch Design SW 개발 프로젝트의 산출물, 일정, 회의록 등을 관리하기 위한 스페이스"
   }
 }
