@@ -40,41 +40,58 @@ async function runMigrator() {
   if (!contextTree) return console.error('❌ 컨텍스트 트리를 가져오지 못해 작업을 중단합니다.');
   console.log('✅ 컨텍스트 트리 수집 완료.\n');
 
-  // 2. 활성화된 스페이스 순회
-  for (const sourceSpace of activeSpaces) {
+  // 2. 날짜 기반 룩백 기간 계산 (기본: 최근 7일)
+  const lookbackDays = spacesConfig.LOOKBACK_DAYS || 7;
+  const sinceDate = new Date();
+  sinceDate.setDate(sinceDate.getDate() - lookbackDays);
+  const sinceDateStr = sinceDate.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+  console.log(`📅 스캔 기준: 최근 ${lookbackDays}일 (${sinceDateStr} 이후 수정된 문서 대상)`);
+
+  // 3. 활성화된 스페이스 순회 (GLOBAL_RULE_VERSION, LOOKBACK_DAYS 같은 비-스페이스 키 제외)
+  const RESERVED_KEYS = ['GLOBAL_RULE_VERSION', 'LOOKBACK_DAYS'];
+  const activeSpaceKeys = Object.keys(spacesConfig).filter(
+    key => !RESERVED_KEYS.includes(key) && spacesConfig[key].active
+  );
+
+  if (activeSpaceKeys.length === 0) {
+    return console.log('⏭️ 활성화된 수집 대상 스페이스가 없습니다.');
+  }
+
+  // 3. 활성화된 스페이스 순회
+  for (const sourceSpace of activeSpaceKeys) {
     console.log(`==================================================`);
     console.log(`📂 대상 스페이스: ${sourceSpace}`);
-    console.log(`📡 [2/3] ${sourceSpace} 스페이스에서 최근 수정된 문서를 검색합니다...`);
+    console.log(`📡 [2/3] ${sourceSpace} 스페이스에서 ${sinceDateStr} 이후 수정된 문서를 검색합니다...`);
     
-    const cql = encodeURIComponent(`space="${sourceSpace}" AND type="page" order by lastmodified desc`);
-    const searchUrl = `/wiki/rest/api/content/search?cql=${cql}&limit=10&expand=body.storage`;
-    
-    let candidates;
-    try {
-      const res = await confluenceRequest('GET', searchUrl);
-      candidates = res.results || [];
-      console.log(`✅ 총 ${candidates.length}개의 후보 문서를 발견했습니다.`);
-    } catch (e) {
-      console.error(`❌ ${sourceSpace} 후보 문서 검색 실패:`, e.message);
-      continue;
-    }
-
-    if (candidates.length === 0) continue;
-
-    console.log(`📡 [3/3] Dify LLM 분석 및 이관을 시작합니다...`);
-    for (const page of candidates) {
-      console.log(`\n--------------------------------------------------`);
-      console.log(`📄 분석 중: [${page.title}] (ID: ${page.id})`);
+      const cql = encodeURIComponent(`space="${sourceSpace}" AND type="page" AND lastmodified >= "${sinceDateStr}" order by lastmodified desc`);
+      const searchUrl = `/wiki/rest/api/content/search?cql=${cql}&limit=200&expand=body.storage`;
       
-      const pageBody = page.body?.storage?.value || '';
-      const truncatedBody = pageBody.substring(0, 20000);
-
+      let candidates;
       try {
-        console.log(`✨ [진행 중] 원본 페이지 메타데이터 및 날짜 조회 중...`);
-        const srcMeta = await fetchPageDetail(page.id);
-        const pageDate = srcMeta.createdAt || ''; // 예: '2026-06-15'
+        const res = await confluenceRequest('GET', searchUrl);
+        candidates = res.results || [];
+        console.log(`✅ 총 ${candidates.length}개의 후보 문서를 발견했습니다.`);
+      } catch (e) {
+        console.error(`❌ ${sourceSpace} 후보 문서 검색 실패:`, e.message);
+        continue;
+      }
 
-        const decision = await getPageClassificationFromDify(page.title, truncatedBody, contextTree, sourceSpace, pageDate);
+      if (candidates.length === 0) continue;
+
+      console.log(`📡 [3/3] Dify LLM 분석 및 이관을 시작합니다...`);
+      for (const page of candidates) {
+        console.log(`\n--------------------------------------------------`);
+        console.log(`📄 분석 중: [${page.title}] (ID: ${page.id})`);
+        
+        const pageBody = page.body?.storage?.value || '';
+        const truncatedBody = pageBody.substring(0, 20000);
+
+        try {
+          console.log(`✨ [진행 중] 원본 페이지 메타데이터 및 날짜 조회 중...`);
+          const srcMeta = await fetchPageDetail(page.id);
+          const pageDate = srcMeta.createdAt ? srcMeta.createdAt.substring(0, 10) : ''; 
+
+          const decision = await getPageClassificationFromDify(page.title, truncatedBody, contextTree, sourceSpace, pageDate);
         console.log(`🤖 Dify 판단: 유효성(${decision.is_valid}) | 목적지(${decision.target_folder_id})`);
 
         if (decision.needs_new_category) {

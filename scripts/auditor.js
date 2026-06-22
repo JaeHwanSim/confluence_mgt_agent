@@ -15,8 +15,20 @@ async function runAuditor() {
   if (!contextTree) return console.error('❌ 컨텍스트 트리를 가져오지 못했습니다.');
 
   console.log(`📡 [2/3] AA 스페이스에서 최근 수정된 문서를 검색합니다...`);
-  const cql = encodeURIComponent(`space="${AA_SPACE_KEY}" AND type="page" order by lastmodified desc`);
-  const searchUrl = `/wiki/rest/api/content/search?cql=${cql}&limit=20&expand=body.storage,ancestors`;
+
+  // 날짜 기반 룩백 기간 계산
+  const fs = require('fs');
+  const path = require('path');
+  const configPath = path.join(__dirname, '..', 'spaces_config.json');
+  const config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+  const lookbackDays = config.LOOKBACK_DAYS || 7;
+  const sinceDate = new Date();
+  sinceDate.setDate(sinceDate.getDate() - lookbackDays);
+  const sinceDateStr = sinceDate.toISOString().split('T')[0];
+  console.log(`📅 감사 기준: 최근 ${lookbackDays}일 (${sinceDateStr} 이후 수정된 문서대상)`);
+
+  const cql = encodeURIComponent(`space="${AA_SPACE_KEY}" AND type="page" AND lastmodified >= "${sinceDateStr}" order by lastmodified desc`);
+  const searchUrl = `/wiki/rest/api/content/search?cql=${cql}&limit=200&expand=body.storage,ancestors`;
   
   let candidates;
   try {
@@ -52,9 +64,9 @@ async function runAuditor() {
 
     // 본문 상단 배너에서 원본 작성일 역추출
     let pageDate = '';
-    const dateMatch = truncatedBody.match(/원본 작성일:\s*([\d-]+)/);
+    const dateMatch = truncatedBody.match(/원본 작성일<\/strong><\/td><td>([\d-]+)/);
     if (dateMatch) {
-      pageDate = dateMatch[1];
+      pageDate = dateMatch[1].trim();
     }
 
     // 0원 필터링: 룰 버전 및 문서 버전 교차 검증

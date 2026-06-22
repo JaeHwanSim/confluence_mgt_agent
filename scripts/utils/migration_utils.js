@@ -26,10 +26,17 @@ async function fetchPageDetail(pageId) {
     authorName = userInfo.displayName || authorName;
   } catch (_) {}
 
+  // 원본 최초 생성일은 v2 API가 아닌 v1 history API에서 조회
+  let originalCreatedAt = '';
+  try {
+    const v1 = await confluenceRequest('GET', `/wiki/rest/api/content/${pageId}?expand=history`);
+    originalCreatedAt = v1.history?.createdDate || '';
+  } catch (_) {}
+
   return {
     body: data.body?.storage?.value || '',
     authorDisplayName: authorName,
-    createdAt: data.version?.createdAt || '',
+    createdAt: originalCreatedAt,  // 원본 최초 생성일 (v1 history.createdDate)
     title: data.title || '',
     url: `${BASE_URL}/wiki${data._links?.webui || ''}`
   };
