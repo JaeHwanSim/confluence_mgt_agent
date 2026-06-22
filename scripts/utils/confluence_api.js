@@ -56,7 +56,6 @@ async function confluenceRequest(method, endpoint, body = null) {
  */
 async function fetchAASpaceTreeText() {
   try {
-    // CQL을 사용하여 AA 스페이스 내 'is-folder' 레이블을 가진 페이지만 검색
     const query = encodeURIComponent(`space="AA" and label="is-folder"`);
     const searchUrl = `/wiki/rest/api/content/search?cql=${query}&limit=200&expand=ancestors`;
     const res = await confluenceRequest('GET', searchUrl);
@@ -64,20 +63,22 @@ async function fetchAASpaceTreeText() {
     const pageList = res.results || [];
     if (pageList.length === 0) {
       console.warn('⚠️ AA 스페이스에 is-folder 레이블을 가진 페이지가 없습니다. 전체 페이지를 가져옵니다.');
-      // Fallback: 레이블 세팅이 아직 안 되어있다면 임시로 V2 API로 전체 조회 (초기 구축용)
       return await fetchAASpaceTreeTextFallback();
     }
+    
+    // is-folder 페이지 ID 집합 (부모가 이 목록에 없으면 루트 노드로 취급)
+    const folderIdSet = new Set(pageList.map(p => p.id));
     
     const childrenMap = {};
     const rootNodes = [];
     
     pageList.forEach(p => {
-      // ancestors 배열의 마지막 요소가 부모 페이지
       const parentId = (p.ancestors && p.ancestors.length > 0) 
         ? p.ancestors[p.ancestors.length - 1].id 
         : null;
-        
-      if (!parentId) {
+      
+      // 부모가 is-folder 목록에 없거나 없는 경우 → 루트 노드로 취급
+      if (!parentId || !folderIdSet.has(parentId)) {
         rootNodes.push(p);
       } else {
         if (!childrenMap[parentId]) childrenMap[parentId] = [];

@@ -17,26 +17,20 @@ function sleep(ms) {
 
 // ─── 1. 페이지 세부 정보 조회 ────────────────────────────────────────────────
 async function fetchPageDetail(pageId) {
-  const data = await confluenceRequest('GET', `/wiki/api/v2/pages/${pageId}?body-format=storage&include-version=true`);
-  const authorId = data.version?.authorId;
-  let authorName = authorId || '(알 수 없음)';
+  // v1 API 한 번 호출로 본문 + 작성자 + 원본 생성일을 모두 조회 (v2 + v1 두 번 호출 대비 50% 절감)
+  const data = await confluenceRequest(
+    'GET',
+    `/wiki/rest/api/content/${pageId}?expand=body.storage,history,version`
+  );
 
-  try {
-    const userInfo = await confluenceRequest('GET', `/wiki/rest/api/user?accountId=${authorId}`);
-    authorName = userInfo.displayName || authorName;
-  } catch (_) {}
-
-  // 원본 최초 생성일은 v2 API가 아닌 v1 history API에서 조회
-  let originalCreatedAt = '';
-  try {
-    const v1 = await confluenceRequest('GET', `/wiki/rest/api/content/${pageId}?expand=history`);
-    originalCreatedAt = v1.history?.createdDate || '';
-  } catch (_) {}
+  const authorId = data.version?.by?.accountId;
+  const authorName = data.version?.by?.displayName || data.history?.createdBy?.displayName || '(알 수 없음)';
+  const originalCreatedAt = data.history?.createdDate || '';
 
   return {
     body: data.body?.storage?.value || '',
     authorDisplayName: authorName,
-    createdAt: originalCreatedAt,  // 원본 최초 생성일 (v1 history.createdDate)
+    createdAt: originalCreatedAt,  // 원본 최초 생성일
     title: data.title || '',
     url: `${BASE_URL}/wiki${data._links?.webui || ''}`
   };
