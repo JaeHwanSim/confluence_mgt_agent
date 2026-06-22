@@ -40,6 +40,19 @@ async function runMigrator() {
   if (!contextTree) return console.error('❌ 컨텍스트 트리를 가져오지 못해 작업을 중단합니다.');
   console.log('✅ 컨텍스트 트리 수집 완료.\n');
 
+  // AA 스페이스 ID 조회
+  let targetSpaceId;
+  try {
+    const spaces = await confluenceRequest('GET', `/wiki/api/v2/spaces?keys=${AA_SPACE_KEY}`);
+    if (spaces && spaces.results && spaces.results.length > 0) {
+      targetSpaceId = spaces.results[0].id;
+    } else {
+      throw new Error('Target space not found');
+    }
+  } catch (e) {
+    return console.error(`❌ 타겟 스페이스(${AA_SPACE_KEY}) ID 조회 실패:`, e.message);
+  }
+
   // 2. 날짜 기반 룩백 기간 계산 (기본: 최근 7일)
   const lookbackDays = spacesConfig.LOOKBACK_DAYS || 7;
   const sinceDate = new Date();
@@ -105,7 +118,7 @@ async function runMigrator() {
         }
         
         console.log(`✨ [복사 진행] 새 페이지 껍데기 생성 중...`);
-        const newPage = await createPage(AA_SPACE_KEY, decision.target_folder_id, srcMeta.title, '<p>복사 중...</p>');
+        const newPage = await createPage(targetSpaceId, decision.target_folder_id, srcMeta.title, '<p>복사 중...</p>');
         
         console.log(`✨ [복사 진행] 첨부파일 복사 중...`);
         const { skippedVideos } = await copyAttachments(page.id, newPage.id);

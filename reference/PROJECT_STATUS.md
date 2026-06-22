@@ -18,35 +18,27 @@
 - **토큰 비용 0원 필터링 (Zero-Cost)**: 룰 버전(`ruleVersion`)과 문서 버전(`pageVersion`)을 교차 검증하여, 변경사항이 없는 문서는 LLM(Dify)을 아예 호출하지 않고 스킵.
 - **GitHub 원격 자동화**: `.github/workflows/confluence_automation.yml` 배포. 개발 환경 없이도 GitHub 웹에서 버튼 클릭만으로 `migrator`와 `auditor` 실행 가능.
 
----
-
-## 2. 퇴근 후 집에서 이어서 하실 일 (Homework) 🔥
-
-집에 가셔서 다음 **세 가지 작업**을 진행해 주시면 전체 시스템이 완벽하게 굴러가기 시작합니다!
-
-### [과제 1] Dify 워크플로우 세팅 및 지식 업로드 (가장 중요!)
-1. 로컬의 `dify/space_rules_knowledge.md` 파일을 통째로 Dify **지식(Knowledge)** 에 업로드하여 벡터화합니다.
-2. Dify 워크플로우의 **시작 노드(Start)** 에 두 개의 입력 변수를 만듭니다: 
-   - `source_space_key` (String)
-   - `page_date` (String)
-3. 시작 노드와 LLM 노드 사이에 **지식 검색(Knowledge Retrieval) 노드**를 배치하고, 검색어(Query)로 `source_space_key` 변수를 넣습니다. (업로드한 지식 문서 연결)
-4. LLM 노드의 시스템 프롬프트에 로컬의 `dify/system_prompt.md` 내용을 복사해 넣습니다.
-   - 프롬프트 안의 `{{#context#}}` 변수 부분에 **지식 검색 노드의 결과물(`result`)**을 연결해 줍니다.
-   - 프롬프트 안의 `{{page_date}}`, `{{page_title}}` 등의 변수들은 **시작 노드(Start)** 의 입력 변수들과 각각 클릭해서 연결해 줍니다.
-
-### [과제 2] GitHub Actions 시크릿 변수 등록 (선택/마무리)
-매일 자정 자동화 봇이 돌게 하거나 수동 실행 버튼을 쓰려면 GitHub Repository 설정에 환경변수가 필요합니다.
-- `Settings > Secrets and variables > Actions` 메뉴 이동
-- 4개의 Repository Secrets 등록:
-  - `CONFLUENCE_EMAIL`
-  - `CONFLUENCE_TOKEN`
-  - `DIFY_API_URL` (로컬 .env에 설정하신 URL, 예: https://api.dify.ai/v1/workflows/run)
-  - `DIFY_API_KEY`
-  - `SLACK_WEBHOOK_URL` (선택 사항: 에러 시 슬랙 알림용)
-  - `EMAIL_USERNAME` (선택 사항: 에러 시 발송할 SMTP 계정 이메일, 예: admin@gmail.com)
-  - `EMAIL_PASSWORD` (선택 사항: SMTP 계정 앱 비밀번호)
-  - `NOTIFY_EMAIL_TO` (선택 사항: 에러 메일을 수신할 대상 이메일 주소)
+### 1-3. 최신 트러블슈팅 및 버그 픽스 완료 내역 (최신)
+- **`context_tree` 빈값 오류 수정**: `is-folder` 태그가 있는 폴더들의 계층 구조를 빌드할 때, 최상위 노드 판별 로직을 개선하여 20여 개의 폴더 트리가 정상적으로 Dify에 전달되도록 수정 완료.
+- **`page_date` 정확성 개선**: Confluence v2 API의 `createdAt`(최근 수정일) 대신 v1 API의 `history.createdDate`(원본 최초 생성일)를 사용하도록 변경 완료. API 호출을 1회로 통합하여 속도 50% 향상.
+- **날짜 기반 스캔 (LOOKBACK_DAYS)**: 기존 하드코딩된 개수(`limit=10`) 제한을 없애고, `spaces_config.json`의 `LOOKBACK_DAYS`(기본 7일) 설정에 따라 최근 며칠간 수정된 문서만 정확히 스캔하도록 CQL 개선.
+- **사내망(Intranet) 접속 이슈 해결**: GitHub Actions가 사내망의 Dify/Confluence에 접근할 수 있도록, 우분투 리눅스 서버에 **Self-hosted Runner**를 구축하고 워크플로우를 `runs-on: self-hosted`로 변경 완료. (현재 정상 동작 확인)
 
 ---
 
-> 💡 **가이드 참조**: 스크립트 실행법 및 전체 아키텍처 개요는 `walkthrough.md` 파일에 깔끔하게 정리해 두었습니다. 집에서 작업하실 때 참고해 주세요! 고생 많으셨습니다. 조심히 퇴근하세요!
+## 2. 다음 세션(또는 집)에서 이어서 하실 일 🔥
+
+현재 **Self-hosted Runner 기반으로 자동화 파이프라인이 사내망에서 완벽하게 동작 중**입니다. Dify 워크플로우 쪽 세팅도 대부분 완료하셨습니다. 다음 세션에서는 아래 항목들만 체크하시면 전체 시스템 구축이 최종 완료됩니다.
+
+### [마무리 체크리스트]
+1. **Dify 워크플로우 프롬프트 옵션 추가 (권장)**
+   - LLM 노드(gpt-oss:120b)의 시스템 프롬프트 맨 마지막 줄에 아래 문구를 추가하여 JSON 응답 안정성을 높이시는 것을 권장합니다.
+   - `DO NOT add any explanation or introductory text. Your ENTIRE response must be ONLY the JSON object.`
+2. **`spaces_config.json`의 `LOOKBACK_DAYS` 조율**
+   - 현재 `7`일로 세팅되어 있습니다. 운영 환경에 맞게 조율해 주세요. (예: 1일 단위 스케줄러면 `1` 또는 `2`로 설정)
+3. **크론잡 주기 확인**
+   - `.github/workflows/confluence_automation.yml` 파일의 cron 주기(`0 15 * * *`, 한국시간 자정)가 의도하신 주기와 맞는지 한 번 더 확인해 주세요.
+
+---
+
+> 💡 **가이드 참조**: 스크립트 실행법 및 전체 아키텍처 개요는 `walkthrough.md` 파일에 깔끔하게 정리해 두었습니다. 고생 많으셨습니다! 다음 세션에서 뵙겠습니다.
