@@ -27,6 +27,7 @@ jobs:
         env:
           CONFLUENCE_EMAIL: ${{ secrets.CONFLUENCE_EMAIL }}
           CONFLUENCE_TOKEN: ${{ secrets.CONFLUENCE_TOKEN }}
+          DIFY_API_URL: ${{ secrets.DIFY_API_URL }}
           DIFY_API_KEY: ${{ secrets.DIFY_API_KEY }}
         run: node scripts/migrator.js
 
@@ -34,6 +35,7 @@ jobs:
         env:
           CONFLUENCE_EMAIL: ${{ secrets.CONFLUENCE_EMAIL }}
           CONFLUENCE_TOKEN: ${{ secrets.CONFLUENCE_TOKEN }}
+          DIFY_API_URL: ${{ secrets.DIFY_API_URL }}
           DIFY_API_KEY: ${{ secrets.DIFY_API_KEY }}
         run: node scripts/auditor.js
 

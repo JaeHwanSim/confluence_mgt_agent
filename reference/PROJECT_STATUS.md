@@ -40,6 +40,7 @@
 - 4개의 Repository Secrets 등록:
   - `CONFLUENCE_EMAIL`
   - `CONFLUENCE_TOKEN`
+  - `DIFY_API_URL` (로컬 .env에 설정하신 URL, 예: https://api.dify.ai/v1/workflows/run)
   - `DIFY_API_KEY`
   - `SLACK_WEBHOOK_URL` (선택 사항: 에러 시 슬랙 알림용)
   - `EMAIL_USERNAME` (선택 사항: 에러 시 발송할 SMTP 계정 이메일, 예: admin@gmail.com)
